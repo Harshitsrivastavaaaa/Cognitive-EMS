@@ -1,311 +1,236 @@
-# Hash# Employee Management System
+# Hash# Employee Management System (HRMS)
 
-A full-stack employee management platform built with **FastAPI** (Python) and **React** (Vite). Features include employee CRUD, attendance tracking, a dashboard with analytics, user authentication (JWT), and user settings.
-
----
-
-## Prerequisites
-
-Make sure you have the following installed before proceeding:
-
-| Tool       | Version  | Download                                      |
-| ---------- | -------- | --------------------------------------------- |
-| **Python** | 3.10+    | [python.org](https://www.python.org/downloads/) |
-| **Node.js**| 18+      | [nodejs.org](https://nodejs.org/)               |
-| **npm**    | 9+       | Bundled with Node.js                            |
-| **Git**    | Any      | [git-scm.com](https://git-scm.com/)            |
+A modern, full-stack AI-ready Employee & Human Resource Management platform built with **FastAPI** (Python 3.10+) and **React** (Vite + Tailwind CSS).
 
 ---
 
-## Getting Started
+## ⚡ Quick Start (Run in under 2 minutes)
+
+### 1. Start the Backend (Terminal 1)
+
+```bash
+# Navigate to backend
+cd backend
+
+# Create & activate virtual environment
+# On Windows:
+python -m venv .venv
+.venv\Scripts\activate
+# On macOS / Linux:
+# python3 -m venv .venv && source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Create .env from template (or copy .env.example)
+copy .env.example .env    # On Windows
+# cp .env.example .env     # On macOS/Linux
+
+# Start FastAPI server
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+> 💡 **Backend is live at:** [http://localhost:8000](http://localhost:8000)  
+> 📖 **API Docs (Swagger UI):** [http://localhost:8000/docs](http://localhost:8000/docs)
+
+---
+
+### 2. Start the Frontend (Terminal 2)
+
+```bash
+# Navigate to frontend
+cd frontend
+
+# Install packages
+npm install
+
+# Start Vite dev server
+npm run dev
+```
+
+> 🌐 **Application is live at:** [http://localhost:5173](http://localhost:5173)
+
+---
+
+## 🔑 Default Login Credentials
+
+The system automatically initializes tables and admin credentials on first startup:
+
+| Role | Email | Password | Access Level |
+| :--- | :--- | :--- | :--- |
+| **Super Admin** | `superadmin@hash.ai` | `superadmin123` | Full administrative control & analytics |
+| **Approval Admin** | `admin.approve@hash.ai` | `Hash#Admin2026!SecureKey` | Approvals, leaves, & department oversight |
+
+---
+
+## 📋 Prerequisites
+
+Ensure you have installed:
+
+| Tool | Minimum Version | Download Link |
+| :--- | :--- | :--- |
+| **Python** | 3.10+ | [python.org](https://www.python.org/downloads/) |
+| **Node.js** | 18+ (LTS recommended) | [nodejs.org](https://nodejs.org/) |
+| **npm** | 9+ | Bundled with Node.js |
+| **Git** | Any recent version | [git-scm.com](https://git-scm.com/) |
+
+---
+
+## 🛠️ Detailed Setup & Configuration
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://gitlab.akiyam.in/harshit/akiyam-employee-management.git
-cd akiyam-employee-management
+git clone https://github.com/Harshitsrivastavaaaa/Hash-Employee-Management.git
+cd "Hash Employee Management"
 ```
 
 ---
 
-### 2. Backend Setup (FastAPI)
+### 2. Backend Configuration (`backend/.env`)
 
-```bash
-cd backend
-```
-
-#### a) Create a Python virtual environment
-
-```bash
-# Windows
-python -m venv .venv
-.venv\Scripts\activate
-
-# macOS / Linux
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-#### b) Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-#### c) Configure environment variables
-
-Create a `.env` file inside the `backend/` directory:
+The backend automatically loads settings from `backend/.env`. A ready-to-use template `backend/.env.example` is provided:
 
 ```env
-SECRET_KEY=your-secret-key-here
+# Security Settings
+SECRET_KEY=9f0b5402324707bb37517c5b6bb17f8a7095b5e7d5cf2a2559595861ab3decd2
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/hash_hrms
+
+# Database Configuration (Choose one):
+# Option A (Recommended for quick start / local dev): SQLite
+DATABASE_URL=sqlite:///./employees.db
+
+# Option B (Production / PostgreSQL):
+# DATABASE_URL=postgresql://postgres:postgres@localhost:5432/hash_hrms
+
+# Admin Accounts
+SUPER_ADMIN_EMAIL=superadmin@hash.ai
+SUPER_ADMIN_PASSWORD=superadmin123
+APPROVAL_ADMIN_EMAIL=admin.approve@hash.ai
+APPROVAL_ADMIN_PASSWORD=Hash#Admin2026!SecureKey
 ```
 
-> **Note on Database Options:**
-> - **PostgreSQL** *(Recommended for Production)*: Set `DATABASE_URL=postgresql://user:password@localhost:5432/hash_hrms`.
-> - **SQLite Fallback**: Set `DATABASE_URL=sqlite:///./employees.db`.
-> - **Migrating from SQLite to PostgreSQL**: Run `python migrate_db.py` from the `backend` directory.
-
-> **Tip:** Generate a secure `SECRET_KEY` by running:
-> ```bash
-> python -c "import secrets; print(secrets.token_hex(32))"
-> ```
-
-
-
-#### d) Run the backend server
-
-```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-The API will be available at **http://localhost:8000**.
-
-- Swagger docs: [http://localhost:8000/docs](http://localhost:8000/docs)
-- ReDoc: [http://localhost:8000/redoc](http://localhost:8000/redoc)
-
-> **Note:** On first startup, the database (`employees.db`) and tables are created automatically, and sample seed data is inserted.
+#### Database Modes:
+- **SQLite (Zero-configuration)**: Set `DATABASE_URL=sqlite:///./employees.db`. The database file `employees.db` is auto-generated in `backend/` with all schemas and seed data on initial launch.
+- **PostgreSQL**: Set `DATABASE_URL=postgresql://<user>:<password>@<host>:5432/<dbname>`. To migrate existing SQLite data to PostgreSQL, run `python migrate_db.py` inside `backend/`.
 
 ---
 
-### 3. Frontend Setup (React + Vite + Electron)
+### 3. Frontend Run Modes
 
-Open a **new terminal** and navigate to the `frontend/` directory:
+Inside the `frontend/` directory:
 
-```bash
-cd frontend
-```
-
-#### a) Install dependencies
-
-```bash
-npm install
-```
-
-#### b) Run the Frontend Server / Application
-
-Choose one of the following run commands depending on your target environment:
-
-##### 🌐 Option A: Web Browser Development Mode (Recommended for Web Dev)
-Runs the Vite development server with hot-module replacement (HMR):
-```bash
-npm run dev
-```
-Open your browser and navigate to **http://localhost:5173**.
-
-##### 💻 Option B: Desktop App (Electron) Development Mode
-Runs Vite dev server and launches the desktop Electron application window simultaneously:
-```bash
-npm run electron:dev
-```
-
-##### 🔍 Option C: Preview Production Web Build
-Builds production static assets into `dist/` and runs a local server to preview the build:
-```bash
-npm run build
-npm run preview
-```
+| Mode | Command | Description |
+| :--- | :--- | :--- |
+| **Web Dev (Browser)** | `npm run dev` | Runs Vite dev server with hot reload at `http://localhost:5173` |
+| **Desktop App (Electron)** | `npm run electron:dev` | Launches both Vite and the Electron desktop app window |
+| **Production Build** | `npm run build` | Compiles production assets into `frontend/dist/` |
+| **Preview Build** | `npm run preview` | Serves the production build locally |
 
 ---
 
-### 4. Run Both Together (Quick Reference)
-
-| Target | Terminal 1 (Backend) | Terminal 2 (Frontend) | Access Location |
-| ------ | -------------------- | --------------------- | --------------- |
-| **Web Browser** | `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload --port 8000` | `cd frontend && npm run dev` | **http://localhost:5173** |
-| **Desktop App** | `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload --port 8000` | `cd frontend && npm run electron:dev` | **Desktop Window (Electron)** |
-
-> **Note for macOS / Linux:** Activate the Python environment using `source .venv/bin/activate` instead of `.venv\Scripts\activate`.
-
----
-
-## Project Structure
+## 📁 Project Architecture
 
 ```
-akiyam-employee-management/
+Hash-Employee-Management/
 ├── backend/
 │   ├── app/
-│   │   ├── main.py              # FastAPI app entrypoint & seed data
-│   │   ├── config.py            # Pydantic settings (reads .env)
-│   │   ├── database.py          # SQLModel engine & session
-│   │   ├── models.py            # DB models (User, Employee, Attendance, etc.)
-│   │   ├── auth_utils.py        # JWT & password utilities
-│   │   ├── routers/
-│   │   │   ├── auth.py          # Login / Register endpoints
-│   │   │   ├── employees.py     # Employee CRUD + CV upload
-│   │   │   ├── dashboard.py     # Dashboard analytics
-│   │   │   ├── attendance.py    # Attendance management
-│   │   │   └── settings.py      # User settings
-│   │   └── uploads/             # Uploaded files (CVs, etc.)
-│   ├── .env                     # Environment variables (not committed)
+│   │   ├── main.py              # FastAPI entrypoint, lifespan events, CORS, static mounts
+│   │   ├── config.py            # Pydantic Settings & environment variables
+│   │   ├── database.py          # SQLModel engine & session manager
+│   │   ├── models.py            # Database tables (User, Employee, Attendance, Project, Leave, etc.)
+│   │   ├── auth_utils.py        # Password hashing (bcrypt) & JWT token handlers
+│   │   └── routers/
+│   │       ├── auth.py          # Login, Registration & verification
+│   │       ├── employees.py     # Employee directory & CRUD
+│   │       ├── dashboard.py     # Analytics & KPI counters
+│   │       ├── attendance.py    # Daily clock-in/out & history
+│   │       ├── leave.py         # Leave applications & approval workflows
+│   │       ├── salary.py        # Payroll, slips & salary deductions
+│   │       ├── projects.py      # Project tracking & assignments
+│   │       ├── departments.py   # Department management
+│   │       ├── documents.py     # Document & CV upload manager
+│   │       ├── employee_portal.py # Self-service employee portal
+│   │       └── settings.py      # Company & account settings
+│   ├── .env.example             # Environment variable template
 │   ├── requirements.txt         # Python dependencies
-│   └── employees.db             # SQLite database (auto-created)
+│   └── employees.db             # Auto-created SQLite database
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx              # Root component & routing
 │   │   ├── main.jsx             # React entry point
-│   │   ├── index.css            # Global styles
-│   │   ├── pages/               # Page-level components
-│   │   │   ├── LoginPage.jsx
+│   │   ├── App.jsx              # Router & route definitions
+│   │   ├── index.css            # Tailwind CSS & global styles
+│   │   ├── pages/               # Application views
 │   │   │   ├── DashboardPage.jsx
 │   │   │   ├── EmployeesListPage.jsx
 │   │   │   ├── EmployeeProfilePage.jsx
 │   │   │   ├── AttendancePage.jsx
-│   │   │   ├── Settings.jsx
-│   │   │   ├── LandingPage.jsx
+│   │   │   ├── LeaveManagementPage.jsx
+│   │   │   ├── PayrollPage.jsx
+│   │   │   ├── ProjectsPage.jsx
+│   │   │   ├── LoginPage.jsx
 │   │   │   └── ...
-│   │   ├── components/          # Reusable UI components
-│   │   │   ├── charts/
-│   │   │   ├── common/
-│   │   │   ├── employees/
-│   │   │   └── layout/
-│   │   ├── services/            # API client & auth helpers
-│   │   ├── context/             # React context providers
-│   │   └── hooks/               # Custom React hooks
-│   ├── vite.config.js           # Vite configuration
-│   ├── package.json             # Node dependencies & scripts
-│   └── index.html               # HTML entry point
+│   │   ├── components/          # Reusable UI components & layouts
+│   │   ├── context/             # React Context (Auth, Theme, Notifications)
+│   │   └── services/            # Axios API client & endpoints
+│   ├── vite.config.js           # Vite build configuration
+│   └── package.json             # Frontend dependencies & npm scripts
 │
 └── README.md
 ```
 
 ---
 
-## API Endpoints
+## 🌐 API Overview
 
-All API routes are prefixed with `/api/v1`.
+All API endpoints are prefixed with `/api/v1`:
 
-| Method   | Endpoint                        | Description               |
-| -------- | ------------------------------- | ------------------------- |
-| `POST`   | `/api/v1/auth/register`        | Register a new user       |
-| `POST`   | `/api/v1/auth/login`           | Login & get JWT token     |
-| `GET`    | `/api/v1/employees`            | List all employees        |
-| `POST`   | `/api/v1/employees`            | Create a new employee     |
-| `GET`    | `/api/v1/employees/{id}`       | Get employee by ID        |
-| `PUT`    | `/api/v1/employees/{id}`       | Update employee           |
-| `DELETE` | `/api/v1/employees/{id}`       | Delete employee           |
-| `GET`    | `/api/v1/dashboard/stats`      | Dashboard statistics      |
-| `GET`    | `/api/v1/attendance`           | Get attendance records    |
-| `POST`   | `/api/v1/attendance`           | Mark attendance           |
-| `GET`    | `/api/v1/settings`             | Get user settings         |
-| `PUT`    | `/api/v1/settings`             | Update user settings      |
+| Area | Base Path | Key Capabilities |
+| :--- | :--- | :--- |
+| 🔐 **Auth** | `/api/v1/auth` | User login, JWT token issue, registration |
+| 👥 **Employees** | `/api/v1/employees` | Employee CRUD, search, filter, profile pictures |
+| 📊 **Dashboard** | `/api/v1/dashboard` | Workforce metrics, attendance trends, statistics |
+| ⏰ **Attendance** | `/api/v1/attendance` | Check-in, check-out, monthly attendance records |
+| 🏖️ **Leave** | `/api/v1/leave` | Request time off, review status, approve/reject |
+| 💰 **Payroll** | `/api/v1/salary` | Salary slip generation, deductions, pay run |
+| 🚀 **Projects** | `/api/v1/projects` | Project tracking, milestone assignments |
+| 🏢 **Departments** | `/api/v1/departments` | Department catalog & head allocation |
+| 📄 **Documents** | `/api/v1/documents` | Employee CV & document storage |
+| 👤 **Portal** | `/api/v1/employee-portal` | Employee self-service workspace |
 
-> For the full interactive API docs, visit `/docs` on the running backend.
+> Detailed schemas and live tests are accessible via Swagger UI at `/docs`.
 
 ---
 
-## Tech Stack
+## 🛠️ Troubleshooting & FAQs
 
-### Backend
-- **FastAPI** — High-performance async Python web framework
-- **SQLModel** — SQL database ORM (SQLAlchemy + Pydantic)
-- **PostgreSQL** — Robust relational database (with SQLite fallback for local desktop)
-- **psycopg2-binary** — PostgreSQL database driver
-- **Uvicorn** — ASGI server
-- **python-jose** — JWT token handling
-- **Passlib + bcrypt** — Password hashing
+### 1. `ModuleNotFoundError` when starting Backend
+- Ensure your virtual environment is active:
+  - Windows: `.venv\Scripts\activate`
+  - Linux/macOS: `source .venv/bin/activate`
+- Run `pip install -r requirements.txt`.
 
-### Frontend
-- **React 18** — UI library
-- **Vite 5** — Build tool & dev server
-- **Tailwind CSS 4** — Utility-first CSS framework
-- **React Router v6** — Client-side routing
-- **Axios** — HTTP client
-- **Recharts** — Charts & data visualization
-- **Framer Motion** — Animations
-- **Lucide React** — Icon library
-- **React Hook Form + Zod** — Form handling & validation
-- **Electron** *(optional)* — Desktop app packaging
+### 2. Port `8000` or `5173` is already in use
+- **Backend**: Specify another port: `uvicorn app.main:app --port 8001 --reload`
+- **Frontend**: Edit `frontend/vite.config.js` or run `npm run dev -- --port 3000`.
 
-## 🚀 Hostinger VPS Deployment
+### 3. Database connection errors
+- If PostgreSQL is not installed locally, set `DATABASE_URL=sqlite:///./employees.db` in `backend/.env`. SQLite requires zero setup.
 
-For complete end-to-end instructions on deploying both backend (FastAPI) and frontend (React static build) on **Hostinger VPS** using Nginx, Gunicorn, systemd, and Let's Encrypt SSL, see:
-
-📖 **[HOSTINGER_DEPLOYMENT.md](file:///c:/Users/ssriv/Akiyam%20Employ%20Management/akiyam-employee-management/HOSTINGER_DEPLOYMENT.md)**
+### 4. CORS errors during API calls
+- Ensure the backend is running on `http://127.0.0.1:8000`. FastAPI has CORS enabled for frontend local origins by default.
 
 ---
 
-## Building for Production
+## 🚢 Deployment Options
 
-### Backend
-The backend runs as-is in production with any ASGI server:
-
-```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
-
-### Frontend
-Build the static assets:
-
-```bash
-cd frontend
-npm run build
-```
-
-The output will be in `frontend/dist/`.
-
-### Electron Desktop App *(optional)*
-
-```bash
-cd frontend
-npm run electron:build
-```
+- **Linux / VPS (systemd + Nginx + Gunicorn)**: Reference [deploy_instructions.md](backend/deploy_instructions.md) inside `backend/`.
+- **Docker / Cloud Containers**: Compatible with any standard Python ASGI and Node.js container images.
 
 ---
 
-## Default Seed Data
+## 📄 License
 
-On first run, the backend auto-creates these sample employees:
-
-| Name               | Role              | Department  |
-| ------------------ | ----------------- | ----------- |
-| Harshit Srivastava | Senior Architect  | Engineering |
-| Sarah Jenkins      | Product Designer  | Design      |
-| Alex Rivera        | Backend Engineer  | Engineering |
-
----
-
-## Troubleshooting
-
-| Issue                            | Solution                                                                 |
-| -------------------------------- | ------------------------------------------------------------------------ |
-| `ModuleNotFoundError`            | Make sure the virtual environment is activated (`source .venv/bin/activate` or `.venv\Scripts\activate`) |
-| Port already in use              | Change the port: `--port 8001` (backend) or edit `vite.config.js` (frontend) |
-| CORS errors in browser           | The backend allows all origins by default — verify the backend is running |
-| Database locked                  | Ensure only one backend instance is running at a time (SQLite limitation) |
-| `npm install` fails              | Delete `node_modules/` and `package-lock.json`, then run `npm install` again |
-
----
-
-## License
-
-Internal project — Hash#.
-
----
-
-## Authors
-
-- **Harshit Srivastava** — Creator & Lead Developer
+Hash# Employee Management System. All rights reserved.
