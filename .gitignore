@@ -1,0 +1,25 @@
+# Node.js
+node_modules/
+dist/
+dist-electron/
+.vite/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+env/
+.pytest_cache/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Databases & Uploads
+*.db
+*.sqlite3
+*.db-shm
+*.db-wal
+backend/uploads/

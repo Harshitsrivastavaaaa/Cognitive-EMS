@@ -1,0 +1,258 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Alex+Brush&display=swap');
+@import "tailwindcss";
+@layer base {
+  body {
+    background-color: var(--bg-main);
+    color: #0f172a;
+    font-family: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  .font-soft {
+    font-family: 'Comfortaa', cursive;
+  }
+  
+  .font-signature {
+    font-family: 'Alex Brush', cursive;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+    z-index: 50; 
+    mix-blend-mode: overlay;
+  }
+}
+
+:root {
+  --bg-main: #f8fafc;          
+  --bg-secondary: #ffffff;     
+  --accent-orange: #2563eb;
+  --accent-orange-light: #3b82f6; 
+  --accent-violet: #6366f1;
+  --accent-fuchsia: #8b5cf6; 
+  --muted: #64748b;
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(226, 232, 240, 0.8);
+  --accent-glow: 0 12px 40px rgba(37, 99, 235, 0.12);
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(to right, var(--accent-violet), var(--accent-fuchsia), var(--accent-orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+  }
+
+  .theme-glass, .glass-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(16px) saturate(120%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(120%) !important;
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    border-radius: 1.5rem !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.6) !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .theme-glass:hover, .glass-card:hover {
+    border-color: rgba(59, 130, 246, 0.4) !important;
+    box-shadow: 0 15px 35px rgba(37, 99, 235, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.8) !important;
+  }
+
+  .bg-glass-bg { background: var(--glass-bg); }
+  .border-glass-border { border-color: var(--glass-border); }
+  .text-muted { color: var(--muted); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+.sidebar-icon {
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.group:hover .sidebar-icon {
+  color: var(--accent-orange);
+  filter: drop-shadow(0 0 8px rgba(234, 88, 12, 0.6));
+}
+
+.sidebar-active {
+  color: var(--accent-orange) !important;
+}
+
+.sidebar-text {
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.3s ease;
+}
+
+.group:hover .sidebar-text {
+  background: linear-gradient(90deg, #ffffff, var(--accent-fuchsia), var(--accent-orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sidebar-active-pill {
+  background: linear-gradient(90deg, rgba(234, 88, 12, 0.15), transparent);
+  border-left: 2px solid var(--accent-orange);
+}
+
+::-webkit-scrollbar { 
+  width: 6px; 
+  height: 6px; 
+}
+::-webkit-scrollbar-track { 
+  background: transparent; 
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { 
+  background: linear-gradient(180deg, var(--accent-violet), var(--accent-orange)); 
+}
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-100px); opacity: 0; }
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(0.9); opacity: 0.9; }
+  50% { transform: translateY(-12vh) scale(1.05); opacity: 0.35; }
+  100% { transform: translateY(-0.6vh) scale(1); opacity: 0.9; }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-blob { animation: blob 7s infinite; }
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+.hover\:before\:animate-shimmer:hover::before {
+  animation: shimmer 1.2s ease-in-out;
+}
+
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  box-shadow: 0 0 0 2px var(--bg-main), 0 0 0 4px var(--accent-orange);
+  border-radius: 8px;
+}
+
+/* --- CUSTOM UTILITIES & ANIMATIONS --- */
+
+/* 1. Makes the gradient text move left and right */
+@keyframes gradient-x {
+    0%, 100% {
+        background-size: 200% 200%;
+        background-position: left center;
+    }
+    50% {
+        background-size: 200% 200%;
+        background-position: right center;
+    }
+}
+
+.animate-gradient-x {
+    animation: gradient-x 3s ease infinite;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.mask-linear-fade {
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+}
+
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+    background-color: rgba(10, 10, 12, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.05) !important;
+    padding: 12px 16px !important;
+}
+
+.recharts-tooltip-item-name, 
+.recharts-tooltip-item-value,
+.recharts-tooltip-item-separator,
+.recharts-default-tooltip .recharts-tooltip-label {
+    color: #e2e8f0 !important; /* Text slate-200 */
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+    stroke: rgba(255, 255, 255, 0.05) !important;
+}
+
+.recharts-text {
+    fill: rgba(255, 255, 255, 0.4) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 11px !important;
+}
+
+/* --- PREMIUM CHART TOOLTIPS (Recharts Dark Mode Fix) --- */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+    background-color: rgba(10, 10, 12, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.05) !important;
+    padding: 12px 16px !important;
+}
+
+.recharts-tooltip-item-name, 
+.recharts-tooltip-item-value,
+.recharts-tooltip-item-separator,
+.recharts-default-tooltip .recharts-tooltip-label {
+    color: #e2e8f0 !important;
+    font-family: inherit !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+    stroke: rgba(255, 255, 255, 0.05) !important;
+}
+
+.recharts-text {
+    fill: rgba(255, 255, 255, 0.4) !important;
+    font-family: inherit !important;
+    font-size: 11px !important;
+}
+
+/* ENDS HERE */
+/* Checked - HARSHIT SRIVASTAVA (Harshit@akiyam.in) */

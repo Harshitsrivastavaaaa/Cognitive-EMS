@@ -1,0 +1,57 @@
+.titlebar {
+    -webkit-app-region: drag;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(90deg, var(--bg-deep-navy) 0%, var(--bg-dark) 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.titlebar-drag-area {
+    flex: 1;
+    padding-left: 12px;
+}
+
+.titlebar-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+}
+
+.titlebar-controls {
+    display: flex;
+    -webkit-app-region: no-drag;
+}
+
+.titlebar-button {
+    width: 46px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.titlebar-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.titlebar-button.close:hover {
+    background: var(--red);
+    color: white;
+}
+
+/* ENDS HERE Have to remove and use TWCS*/ 
+/* Checked - HARSHIT SRIVASTAVA (Harshit@akiyam.in) */

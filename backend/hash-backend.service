@@ -1,0 +1,13 @@
+[Unit]
+Description=Hash# HRMS FastAPI Uvicorn Backend Service
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/var/www/hash-hrms/backend
+ExecStart=/var/www/hash-hrms/backend/venv/bin/gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 127.0.0.1:8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
