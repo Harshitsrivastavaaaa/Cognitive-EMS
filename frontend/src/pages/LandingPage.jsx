@@ -9,11 +9,11 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer'
 
 const MOCK_ORG_NODES = [
-  { id: 1, name: "Sarah Jenkins", role: "Principal Architect", dept: "Engineering", project: "Core Cloud OS", salary: "₹24,00,000", status: "Active", activity: "Pushed 4 commits today", avatarBg: "from-blue-600 to-indigo-600", tagColor: "bg-blue-50 text-blue-700 border-blue-200", empId: "EMP-8042", email: "sarah.j@hash.ai", uptime: "99.9%", level: "L5 - Principal" },
-  { id: 2, name: "Alex Rivera", role: "Senior UI/UX Designer", dept: "Design", project: "Glassmorphism UI", salary: "₹18,50,000", status: "Active", activity: "Completed Figma review", avatarBg: "from-pink-600 to-rose-600", tagColor: "bg-pink-50 text-pink-700 border-blue-200", empId: "EMP-8043", email: "alex.r@hash.ai", uptime: "99.4%", level: "L4 - Senior" },
-  { id: 3, name: "Marcus Thorne", role: "Backend Engineer", dept: "Engineering", project: "Payment Gateway", salary: "₹19,00,000", status: "Active", activity: "In code review", avatarBg: "from-purple-600 to-indigo-600", tagColor: "bg-purple-50 text-purple-700 border-blue-200", empId: "EMP-8044", email: "marcus.t@hash.ai", uptime: "99.8%", level: "L3 - Mid-Level" },
+  { id: 1, name: "Harshit Srivastava", role: "Principal Architect", dept: "Engineering", project: "Core Cloud OS", salary: "₹24,00,000", status: "Active", activity: "Pushed 4 commits today", avatarBg: "from-blue-600 to-indigo-600", tagColor: "bg-blue-50 text-blue-700 border-blue-200", empId: "EMP-8042", email: "sarah.j@hash.ai", uptime: "99.9%", level: "L5 - Principal" },
+  { id: 2, name: "Prachi Khanna", role: "Senior UI/UX Designer", dept: "Design", project: "Glassmorphism UI", salary: "₹18,50,000", status: "Active", activity: "Completed Figma review", avatarBg: "from-pink-600 to-rose-600", tagColor: "bg-pink-50 text-pink-700 border-blue-200", empId: "EMP-8043", email: "alex.r@hash.ai", uptime: "99.4%", level: "L4 - Senior" },
+  { id: 3, name: "Marcus Kirk", role: "Backend Engineer", dept: "Engineering", project: "Payment Gateway", salary: "₹19,00,000", status: "Active", activity: "In code review", avatarBg: "from-purple-600 to-indigo-600", tagColor: "bg-purple-50 text-purple-700 border-blue-200", empId: "EMP-8044", email: "marcus.t@hash.ai", uptime: "99.8%", level: "L3 - Mid-Level" },
   { id: 4, name: "Elena Rostova", role: "Product Manager", dept: "Product", project: "AI Analytics", salary: "₹22,00,000", status: "Active", activity: "Sprint planning active", avatarBg: "from-emerald-600 to-teal-600", tagColor: "bg-emerald-50 text-emerald-700 border-blue-200", empId: "EMP-8045", email: "elena.r@hash.ai", uptime: "100%", level: "L4 - Lead PM" },
-  { id: 5, name: "David Kim", role: "DevOps Lead", dept: "Operations", project: "Node Infrastructure", salary: "₹21,00,000", status: "Active", activity: "Kubernetes cluster healthy", avatarBg: "from-amber-600 to-orange-600", tagColor: "bg-amber-50 text-amber-700 border-blue-200", empId: "EMP-8046", email: "david.k@hash.ai", uptime: "99.9%", level: "L4 - Lead Ops" }
+  { id: 5, name: "David Lucas", role: "DevOps Lead", dept: "Operations", project: "Node Infrastructure", salary: "₹21,00,000", status: "Active", activity: "Kubernetes cluster healthy", avatarBg: "from-amber-600 to-orange-600", tagColor: "bg-amber-50 text-amber-700 border-blue-200", empId: "EMP-8046", email: "david.k@hash.ai", uptime: "99.9%", level: "L4 - Lead Ops" }
 ];
 
 export default function LandingPage() {
@@ -83,8 +83,8 @@ export default function LandingPage() {
         <div className="w-full px-6 lg:px-16 max-w-7xl mx-auto flex flex-col items-center text-center pt-6 pb-16">
           
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/90 shadow-2xs text-xs font-semibold text-slate-700 mb-8">
-            <span className="w-2 h-2 rounded-full bg-pink-500 animate-ping" />
-            Hash#AI EMS Platform v2.4 Live
+            <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+            Hash#AI Automated EMS by Hash#AI 
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-slate-900 mb-6">
