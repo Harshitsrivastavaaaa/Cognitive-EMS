@@ -5,6 +5,14 @@ import { documentService } from '../services/documents';
 import { employeesService } from '../services/employees';
 import api from '../services/api';
 
+// Simplified Glass Theme
+const glassCardStyle = "bg-white/80 border border-slate-200 shadow-sm backdrop-blur-lg rounded-2xl";
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+};
+
 export default function DocumentsPage() {
   const [documents, setDocuments] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -78,6 +86,7 @@ export default function DocumentsPage() {
       alert('Failed to delete document.');
     }
   };
+
   const filteredDocs = documents.filter(d => {
     const matchesSearch = d.original_name.toLowerCase().includes(search.toLowerCase()) || 
                           (d.employee_name || "").toLowerCase().includes(search.toLowerCase()) ||
@@ -90,24 +99,23 @@ export default function DocumentsPage() {
   const docTypes = ['All', 'Joining Letter', 'Experience Letter', 'Offer Letter', 'Resume / CV', 'ID Proof', 'Tax Form', 'Contract', 'Other'];
 
   return (
-    <div className="p-8 relative z-10 w-full min-h-screen font-sans">
-      
-      {/* Background Glow */}
-      <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-500/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-teal-500/10 rounded-full blur-[120px]" />
-      </div>
-
+    <motion.div 
+      className="w-full h-full p-6 lg:p-10 text-slate-900 space-y-8 pb-24"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* HEADER SECTION */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
+      <motion.div variants={containerVariants} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-black italic tracking-tighter text-white mb-2 flex items-center gap-4">
-            <div className="p-3 bg-emerald-500/20 rounded-2xl text-emerald-400 border border-emerald-500/20">
-              <FileText size={28} />
-            </div>
-            Document Vault
+          <div className="flex items-center gap-2 mb-1 text-slate-500 text-xs font-semibold">
+            <FileText size={14} className="text-blue-600" />
+            <span className="uppercase tracking-widest">Repository & Storage</span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+            Document <span className="text-blue-600">Vault</span>
           </h1>
-          <p className="text-sm font-medium text-slate-400 tracking-wide">
+          <p className="text-sm text-slate-600 mt-1">
             Securely manage employee candidate files, onboarding letters, and exit certificates
           </p>
         </div>
@@ -115,215 +123,199 @@ export default function DocumentsPage() {
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setShowUploadModal(true)}
-            className="px-6 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider rounded-2xl flex items-center gap-2 transition-all shadow-[0_0_20px_-5px_#10b981] active:scale-95"
+            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl flex items-center gap-2 transition-colors shadow-sm"
           >
-            <UploadCloud size={18} />
+            <UploadCloud size={16} />
             Upload Candidate Document
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* STATUS BANNER */}
       {statusMessage && (
-        <div className="mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm font-bold flex items-center gap-2 animate-in fade-in duration-300">
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold flex items-center gap-2">
           <CheckCircle2 size={18} />
           {statusMessage}
         </div>
       )}
 
       {/* SEARCH AND TYPE FILTER BAR */}
-      <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-6 backdrop-blur-xl mb-6 space-y-4">
+      <motion.div variants={containerVariants} className={`${glassCardStyle} p-6 space-y-4`}>
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
           <input 
             type="text" 
             placeholder="Search documents by filename, candidate/employee name, or type..." 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-3.5 pl-12 pr-4 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-all placeholder:text-slate-500"
+            className="w-full bg-white border border-slate-300 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 transition-all placeholder-slate-400"
           />
         </div>
 
         {/* Type Filter Pills */}
         <div className="flex flex-wrap items-center gap-2 pt-2">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mr-2">Filter Type:</span>
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mr-2">Filter Type:</span>
           {docTypes.map(type => (
             <button
               key={type}
               onClick={() => setSelectedDocTypeFilter(type)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 selectedDocTypeFilter === type
-                  ? 'bg-emerald-500 text-white shadow-md'
-                  : 'bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10'
+                  ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-sm'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
               }`}
             >
               {type}
             </button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* DOCUMENTS GRID */}
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="animate-spin text-emerald-500" size={32} />
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredDocs.map((doc, idx) => (
-            <motion.div 
-              key={doc.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.04 }}
-              className="bg-white/[0.02] border border-white/10 rounded-3xl p-6 hover:border-emerald-500/30 hover:bg-white/[0.04] transition-all group relative overflow-hidden flex flex-col justify-between"
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity" />
-              
-              <div>
-                <div className="flex justify-between items-start mb-4">
-                  <div className={`p-3 rounded-xl ${
-                    doc.document_type === 'Joining Letter' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
-                    doc.document_type === 'Experience Letter' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' :
-                    'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                  }`}>
-                    {doc.document_type === 'Experience Letter' ? <Award size={22} /> : <FileText size={22} />}
+      <motion.div variants={containerVariants}>
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <Loader2 className="animate-spin text-blue-600" size={32} />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredDocs.map((doc, idx) => (
+              <motion.div 
+                key={doc.id}
+                variants={containerVariants}
+                className={`${glassCardStyle} p-6 hover:shadow-md hover:border-blue-300 transition-all group flex flex-col justify-between`}
+              >
+                <div>
+                  <div className="flex justify-between items-start mb-4">
+                    <div className={`p-2.5 rounded-xl ${
+                      doc.document_type === 'Joining Letter' ? 'bg-blue-50 text-blue-600 border border-blue-200' :
+                      doc.document_type === 'Experience Letter' ? 'bg-amber-50 text-amber-600 border border-amber-200' :
+                      'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                    }`}>
+                      {doc.document_type === 'Experience Letter' ? <Award size={20} /> : <FileText size={20} />}
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
+                      {doc.document_type || 'Document'}
+                    </span>
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
-                    {doc.document_type || 'Document'}
-                  </span>
+
+                  <h3 className="font-bold text-slate-900 text-base truncate mb-1" title={doc.original_name}>
+                    {doc.original_name}
+                  </h3>
+                  <p className="text-xs text-slate-500 mb-5 flex items-center gap-1.5 font-medium">
+                    <UserCheck size={14} className="text-blue-600" />
+                    <span className="truncate">{doc.employee_name || 'Candidate / Employee'}</span>
+                  </p>
                 </div>
 
-                <h3 className="font-bold text-white text-base truncate mb-1" title={doc.original_name}>
-                  {doc.original_name}
-                </h3>
-                <p className="text-xs text-slate-400 mb-4 flex items-center gap-2 font-medium">
-                  <UserCheck size={13} className="text-emerald-400" />
-                  <span>{doc.employee_name || 'Candidate / Employee'}</span>
-                </p>
+                <div className="flex items-center gap-2 pt-4 border-t border-slate-100">
+                  <a 
+                    href={documentService.downloadDocumentUrl(doc.id)}
+                    download
+                    className="flex-1 text-center py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-semibold transition-colors border border-blue-200 flex items-center justify-center gap-1.5"
+                  >
+                    <Download size={14} /> Download
+                  </a>
+                  <button 
+                    onClick={() => handleDelete(doc.id)}
+                    className="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl transition-colors border border-red-200"
+                    title="Delete"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+
+            {filteredDocs.length === 0 && (
+              <div className="col-span-full py-20 text-center border border-dashed border-slate-200 rounded-2xl bg-white/50 text-slate-500 font-semibold text-sm">
+                No matching documents found in vault.
               </div>
+            )}
+          </div>
+        )}
+      </motion.div>
 
-              <div className="flex items-center gap-2 pt-4 border-t border-white/5">
-                <a 
-                  href={documentService.downloadDocumentUrl(doc.id)}
-                  download
-                  className="flex-1 text-center py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-xl text-xs font-bold transition-all border border-emerald-500/20"
-                >
-                  <Download size={14} className="inline mr-1.5" /> Download
-                </a>
-                <button 
-                  onClick={() => handleDelete(doc.id)}
-                  className="p-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl transition-all border border-red-500/20"
-                  title="Delete"
-                >
-                  <Trash2 size={14} />
-                </button>
-              </div>
-            </motion.div>
-          ))}
-
-          {filteredDocs.length === 0 && (
-            <div className="col-span-full py-20 text-center border border-dashed border-white/10 rounded-3xl text-slate-500 font-semibold text-sm uppercase tracking-wider">
-              No matching documents found in vault.
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* UPLOAD DOCUMENT BY CANDIDATE SELECTOR MODAL */}
+      {/* UPLOAD DOCUMENT MODAL */}
       <AnimatePresence>
         {showUploadModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
             <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }} 
-              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-              onClick={() => setShowUploadModal(false)}
-            />
-            <motion.div 
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="relative w-full max-w-lg bg-[#0a0a0c] border border-white/10 rounded-3xl p-8 shadow-2xl overflow-hidden z-10"
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-lg bg-white/95 backdrop-blur-xl border border-slate-200 rounded-3xl p-6 md:p-8 shadow-xl"
             >
-              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px]" />
-              
-              <div className="flex justify-between items-center mb-6 relative z-10">
+              <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-5">
                 <div>
-                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                    <UploadCloud className="text-emerald-500" /> Candidate Document Upload
-                  </h2>
-                  <p className="text-xs text-slate-400 mt-0.5">Select a candidate/employee to attach documents to their profile vault.</p>
+                  <h3 className="text-xl font-bold text-slate-900">Candidate Document Upload</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">Attach documents to employee profile vault.</p>
                 </div>
-                <button onClick={() => setShowUploadModal(false)} className="text-slate-400 hover:text-white transition-colors">
-                  <X size={20} />
+                <button onClick={() => setShowUploadModal(false)} className="p-2 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+                  <X size={18} />
                 </button>
               </div>
 
-              <form onSubmit={handleUploadSubmit} className="space-y-5 relative z-10">
-                
-                {/* CANDIDATE SELECTOR */}
+              <form onSubmit={handleUploadSubmit} className="space-y-4">
                 <div>
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
                     Select Candidate / Employee *
                   </label>
                   <select 
                     value={uploadData.employee_id}
                     onChange={e => setUploadData(p => ({ ...p, employee_id: e.target.value }))}
-                    className="w-full bg-[#121214] border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
                     required
                   >
-                    <option value="" className="bg-[#0f0f11]">-- Choose Candidate / Employee --</option>
+                    <option value="">-- Choose Candidate / Employee --</option>
                     {employees.map(emp => (
-                      <option key={emp.id} value={emp.id} className="bg-[#0f0f11]">
+                      <option key={emp.id} value={emp.id}>
                         {emp.first_name} {emp.last_name} — {emp.role} ({emp.department}) [{emp.status?.toUpperCase() || 'ACTIVE'}]
                       </option>
                     ))}
                   </select>
                 </div>
 
-                {/* DOCUMENT TYPE */}
                 <div>
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
                     Document Classification *
                   </label>
                   <select 
                     value={uploadData.document_type}
                     onChange={e => setUploadData(p => ({ ...p, document_type: e.target.value }))}
-                    className="w-full bg-[#121214] border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
                   >
-                    <option value="Joining Letter" className="bg-[#0f0f11]">Joining Letter / Offer Letter</option>
-                    <option value="Experience Letter" className="bg-[#0f0f11]">Experience Certificate / Letter</option>
-                    <option value="Resume / CV" className="bg-[#0f0f11]">Resume / CV Document</option>
-                    <option value="ID Proof" className="bg-[#0f0f11]">ID Proof / Government Document</option>
-                    <option value="Tax Form" className="bg-[#0f0f11]">Tax Form / Payroll Record</option>
-                    <option value="Contract" className="bg-[#0f0f11]">Employment Contract</option>
-                    <option value="Other" className="bg-[#0f0f11]">Other Miscellaneous File</option>
+                    <option value="Joining Letter">Joining Letter / Offer Letter</option>
+                    <option value="Experience Letter">Experience Certificate / Letter</option>
+                    <option value="Resume / CV">Resume / CV Document</option>
+                    <option value="ID Proof">ID Proof / Government Document</option>
+                    <option value="Tax Form">Tax Form / Payroll Record</option>
+                    <option value="Contract">Employment Contract</option>
+                    <option value="Other">Other Miscellaneous File</option>
                   </select>
                 </div>
 
-                {/* FILE ATTACHMENT */}
                 <div>
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
                     Upload Document File (PDF / Doc / Image) *
                   </label>
                   <input 
                     type="file"
                     onChange={handleFileChange}
-                    className="w-full bg-[#121214] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-500/20 file:text-emerald-400 hover:file:bg-emerald-500/30 focus:outline-none"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2 text-sm text-slate-700 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:outline-none"
                     required
                   />
                 </div>
 
-                <div className="pt-3">
+                <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                  <button type="button" onClick={() => setShowUploadModal(false)} className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-sm font-semibold">Cancel</button>
                   <button 
                     type="submit" 
                     disabled={uploading || !uploadData.file || !uploadData.employee_id}
-                    className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-[0_0_20px_-5px_#10b981] flex items-center justify-center gap-2"
+                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm shadow-sm flex items-center gap-2"
                   >
                     {uploading ? <Loader2 size={16} className="animate-spin" /> : <UploadCloud size={16} />}
-                    <span>{uploading ? 'Uploading to Vault...' : 'Confirm & Save Document'}</span>
+                    <span>{uploading ? 'Uploading...' : 'Save Document'}</span>
                   </button>
                 </div>
               </form>
@@ -331,7 +323,6 @@ export default function DocumentsPage() {
           </div>
         )}
       </AnimatePresence>
-
-    </div>
+    </motion.div>
   );
 }

@@ -8,6 +8,13 @@ import { employeesService } from '../services/employees';
 import api from '../services/api';
 import logoSrc from '../assets/logo.png';
 
+// Simplified Glass Theme Glassmorphisom we call it .HashAi
+const glassCardStyle = "bg-white/80 border border-slate-200 shadow-sm backdrop-blur-lg rounded-2xl";
+const containerVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+};
+
 export default function OnboardingPage() {
   const { user } = useAuth();
   const [employeesList, setEmployeesList] = useState([]);
@@ -202,12 +209,10 @@ export default function OnboardingPage() {
     doc.setTextColor(150, 150, 150);
     doc.text("This is an official document of Hash AI LLC.", 14, 280);
 
-    // Save PDF locally
     const pdfFilename = `Offer_Letter_${formData.candidateName?.replace(/\s+/g, '_') || 'Draft'}.pdf`;
     const generatedBlob = doc.output('blob');
     doc.save(pdfFilename);
 
-    // Save Joining Letter PDF into specific candidate's Document Vault
     try {
       let targetEmpId = selectedEmpId;
 
@@ -254,52 +259,59 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="p-8 relative z-10 w-full min-h-screen font-sans flex flex-col">
-      <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-[120px]" />
-      </div>
-
-      <div className="mb-10">
-        <h1 className="text-4xl font-black italic tracking-tighter text-white mb-2 flex items-center gap-4">
-          <div className="p-3 bg-blue-500/20 rounded-2xl text-blue-400 border border-blue-500/20">
-            <UserPlus size={28} />
+    <motion.div 
+      className="w-full h-full p-6 lg:p-10 text-slate-900 space-y-8 pb-24"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {/* HEADER SECTION */}
+      <motion.div variants={containerVariants} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <div className="flex items-center gap-2 mb-1 text-slate-500 text-xs font-semibold">
+            <UserPlus size={14} className="text-blue-600" />
+            <span className="uppercase tracking-widest">Recruitment & Staffing</span>
           </div>
-          Onboarding Hub
-        </h1>
-        <p className="text-sm font-medium text-slate-400 tracking-wide">Generate offer letters and manage new hires</p>
-      </div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+            Onboarding <span className="text-blue-600">Hub</span>
+          </h1>
+          <p className="text-sm text-slate-600 mt-1">Generate offer letters and manage new hires</p>
+        </div>
+      </motion.div>
 
-      <div className="flex flex-col lg:flex-row gap-8 flex-1">
+      {/* MAIN CONTENT AREA */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
         {/* Form Section */}
-        <div className="w-full lg:w-1/3 bg-[#0a0a0c] border border-white/5 rounded-3xl p-8 backdrop-blur-xl h-fit shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-[80px]" />
-          
-          <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            <FileText className="text-blue-500" />
-            Offer Letter Details
-          </h2>
-
-          <div className="space-y-5 relative z-10">
-            
-            {/* Existing Candidate Dropdown */}
+        <motion.div variants={containerVariants} className={`lg:col-span-5 ${glassCardStyle} p-6 md:p-8 space-y-6 h-fit shadow-sm`}>
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
+              <FileText size={20} />
+            </div>
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-2 flex items-center gap-1.5">
-                <UserCheck size={13} className="text-blue-400" /> Select Existing Candidate (Optional)
+              <h2 className="text-lg font-bold text-slate-900">Offer Letter Details</h2>
+              <p className="text-xs text-slate-500">Configure candidate specifications</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                <UserCheck size={14} className="text-blue-600" /> Select Existing Candidate (Optional)
               </label>
               {loadingEmployees ? (
                 <div className="text-xs text-slate-500 flex items-center gap-2 py-2">
-                  <Loader2 size={14} className="animate-spin" /> Loading candidates...
+                  <Loader2 size={14} className="animate-spin text-blue-600" /> Loading candidates...
                 </div>
               ) : (
                 <select 
                   value={selectedEmpId} 
                   onChange={handleSelectEmployeeChange}
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500/50"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
                 >
-                  <option value="" className="bg-[#0f0f11]">-- Create New Candidate / Select Existing --</option>
+                  <option value="">-- Create New Candidate / Select Existing --</option>
                   {employeesList.map(emp => (
-                    <option key={emp.id} value={emp.id} className="bg-[#0f0f11]">
+                    <option key={emp.id} value={emp.id}>
                       {emp.first_name} {emp.last_name} ({emp.role || 'Hire'})
                     </option>
                   ))}
@@ -308,100 +320,100 @@ export default function OnboardingPage() {
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Candidate Full Name *</label>
-              <input type="text" name="candidateName" value={formData.candidateName} onChange={handleChange} placeholder="e.g. Jane Doe" className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500/50" />
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Candidate Full Name *</label>
+              <input type="text" name="candidateName" value={formData.candidateName} onChange={handleChange} placeholder="e.g. Jane Doe" className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Email Address</label>
-              <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="e.g. jane@example.com" className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500/50" />
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Email Address</label>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="e.g. jane@example.com" className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Job Title</label>
-              <input type="text" name="jobTitle" value={formData.jobTitle} onChange={handleChange} placeholder="e.g. Senior Developer" className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500/50" />
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Job Title</label>
+              <input type="text" name="jobTitle" value={formData.jobTitle} onChange={handleChange} placeholder="e.g. Senior Developer" className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Department</label>
-              <input type="text" name="department" value={formData.department} onChange={handleChange} placeholder="e.g. Engineering" className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500/50" />
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Department</label>
+              <input type="text" name="department" value={formData.department} onChange={handleChange} placeholder="e.g. Engineering" className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Annual Compensation (₹)</label>
-              <input type="number" name="compensation" value={formData.compensation} onChange={handleChange} placeholder="e.g. 1500000" className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500/50" />
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Annual Compensation (₹)</label>
+              <input type="number" name="compensation" value={formData.compensation} onChange={handleChange} placeholder="e.g. 1500000" className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Joining Date</label>
-              <input type="date" name="joiningDate" value={formData.joiningDate} onChange={handleChange} className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-slate-300 focus:outline-none focus:border-blue-500/50 color-scheme-dark" />
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Joining Date</label>
+              <input type="date" name="joiningDate" value={formData.joiningDate} onChange={handleChange} className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Reporting Manager</label>
-              <input type="text" name="reportingManager" value={formData.reportingManager} onChange={handleChange} placeholder="e.g. John Smith" className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500/50" />
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Reporting Manager</label>
+              <input type="text" name="reportingManager" value={formData.reportingManager} onChange={handleChange} placeholder="e.g. John Smith" className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Admin / Signatory Name</label>
-              <input type="text" name="signatoryName" value={formData.signatoryName} onChange={handleChange} placeholder="Harshit Srivastava" className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500/50" />
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin / Signatory Name</label>
+              <input type="text" name="signatoryName" value={formData.signatoryName} onChange={handleChange} placeholder="Harshit Srivastava" className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
             </div>
 
-            <button onClick={generatePDF} className="w-full mt-4 py-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl flex justify-center items-center gap-2 transition-all shadow-[0_0_20px_-5px_#3b82f6]">
-              <Download size={18} />
+            <button onClick={generatePDF} className="w-full mt-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl flex justify-center items-center gap-2 transition-all shadow-sm">
+              <Download size={16} />
               Generate & Save to Vault
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Live Preview Section */}
-        <div className="w-full lg:w-2/3 bg-white text-[#3c3c3c] p-10 rounded-3xl shadow-xl h-fit min-h-[600px] font-sans">
-          {/* Header */}
-          <div className="flex items-center gap-4 mb-4">
-            <img src={logoSrc} alt="Hash# Logo" className="h-10 object-contain" />
-            <div>
-              <h1 className="text-2xl font-semibold text-[#282828]">Hash AI LLC</h1>
-              <p className="text-sm text-[#646464]">Offer of Employment</p>
+        <motion.div variants={containerVariants} className={`lg:col-span-7 ${glassCardStyle} p-8 md:p-10 text-slate-800 h-fit min-h-[600px] shadow-sm`}>
+          <div className="flex items-center justify-between border-b border-slate-200 pb-6 mb-6">
+            <div className="flex items-center gap-3">
+              <img src={logoSrc} alt="Hash# Logo" className="h-8 object-contain" />
+              <div>
+                <h1 className="text-xl font-bold text-slate-900">Hash AI LLC</h1>
+                <p className="text-xs text-slate-500">Offer of Employment</p>
+              </div>
             </div>
+            <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full border border-blue-200">Live Preview</span>
           </div>
-          
-          <div className="w-full h-px bg-[#dcdcdc] mb-6"></div>
 
-          <div className="space-y-6 text-[15px]">
-            <div className="flex justify-between text-[#141414]">
+          <div className="space-y-6 text-sm">
+            <div className="flex justify-between text-slate-700 font-medium">
               <span>Date: {format(new Date(), 'MMMM dd, yyyy')}</span>
             </div>
 
             <div className="pt-2">
-              <p className="font-bold text-[#141414]">Dear {formData.candidateName || '[Candidate Name]'},</p>
+              <p className="font-bold text-slate-900">Dear {formData.candidateName || '[Candidate Name]'},</p>
             </div>
 
-            <p className="leading-relaxed text-justify">
-              We are thrilled to offer you the position of <span className="font-semibold bg-blue-100 px-1">{formData.jobTitle || '[Job Title]'}</span> in the <span className="font-semibold bg-blue-100 px-1">{formData.department || '[Department]'}</span> department at Hash AI LLC. We were extremely impressed with your skills and experience, and we believe you will be a valuable addition to our team.
+            <p className="leading-relaxed text-slate-600 text-justify">
+              We are thrilled to offer you the position of <span className="font-semibold text-blue-700 bg-blue-50 px-1 py-0.5 rounded">{formData.jobTitle || '[Job Title]'}</span> in the <span className="font-semibold text-blue-700 bg-blue-50 px-1 py-0.5 rounded">{formData.department || '[Department]'}</span> department at Hash AI LLC. We were extremely impressed with your skills and experience, and we believe you will be a valuable addition to our team.
             </p>
 
-            <div className="space-y-2">
-              <p className="font-bold text-[#141414]">Key Terms of Your Employment:</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>Joining Date: <span className="font-semibold">{formData.joiningDate ? format(new Date(formData.joiningDate), 'MMMM dd, yyyy') : '[Date]'}</span></li>
-                <li>Compensation: <span className="font-semibold">INR {formData.compensation ? Number(formData.compensation).toLocaleString() : '[Amount]'}</span> per annum</li>
-                <li>Reporting Manager: <span className="font-semibold">{formData.reportingManager || '[Manager Name]'}</span></li>
+            <div className="space-y-2 bg-slate-50 border border-slate-200/60 p-4 rounded-xl">
+              <p className="font-bold text-slate-900 uppercase tracking-wider text-xs">Key Terms of Your Employment:</p>
+              <ul className="list-disc pl-5 space-y-1.5 text-slate-600">
+                <li>Joining Date: <span className="font-semibold text-slate-800">{formData.joiningDate ? format(new Date(formData.joiningDate), 'MMMM dd, yyyy') : '[Date]'}</span></li>
+                <li>Compensation: <span className="font-semibold text-slate-800">INR {formData.compensation ? Number(formData.compensation).toLocaleString() : '[Amount]'}</span> per annum</li>
+                <li>Reporting Manager: <span className="font-semibold text-slate-800">{formData.reportingManager || '[Manager Name]'}</span></li>
               </ul>
             </div>
 
-            <p className="leading-relaxed text-justify">
+            <p className="leading-relaxed text-slate-600 text-justify">
               Please sign and return a copy of this letter to indicate your acceptance of this offer. We look forward to welcoming you aboard and achieving great success together.
             </p>
 
-            <div className="pt-12">
-              <p className="text-[#141414]">Sincerely,</p>
-              <div className="h-16 flex items-end">
-                <p className="font-signature text-4xl text-slate-900 -rotate-3 -ml-2">{adminName}</p>
+            <div className="pt-8 border-t border-slate-100">
+              <p className="text-slate-900">Sincerely,</p>
+              <div className="h-14 flex items-end">
+                <p className="font-signature text-3xl text-slate-900 -rotate-3 -ml-1">{adminName}</p>
               </div>
-              <p className="font-bold text-[#141414] mt-1">{adminName}</p>
-              <p>Director / HR Head</p>
+              <p className="font-bold text-slate-900 mt-1">{adminName}</p>
+              <p className="text-xs text-slate-500">Director / HR Head</p>
             </div>
 
-            {/* Footer */}
-            <div className="pt-12 text-sm text-[#969696]">
+            <div className="pt-6 text-xs text-slate-400 border-t border-slate-100">
               This is an official document of Hash AI LLC.
             </div>
           </div>
-        </div>
+        </motion.div>
+
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { dashboardService } from "../services/employees";
-import MetricCard from "../components/common/MetricCard";
 import GlassCard, { CardHeader } from "../components/common/GlassCard";
 import LineChart from "../components/charts/LineChart";
 import DonutChart from "../components/charts/DonutChart";
@@ -25,7 +24,7 @@ import DonutChart from "../components/charts/DonutChart";
 const glassCardStyle = "bg-white/80 border border-slate-200 shadow-sm backdrop-blur-lg rounded-2xl";
 const glassHoverStyle = "hover:border-blue-400/50 hover:shadow-md transition-all duration-300";
 
-// Simplified animation (Staggered children instead of multiple individual triggers)
+// Simplified animation
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -41,7 +40,7 @@ const itemVariants = {
 
 export default function DashboardPage() {
   const { user: authUser } = useAuth();
-  const userName = authUser?.firstName || authUser?.first_name || "Harshit";
+  const userName = authUser?.firstName || authUser?.first_name || authUser?.name || "Admin";
   const navigate = useNavigate();
 
   const [greeting, setGreeting] = useState("");
@@ -66,7 +65,6 @@ export default function DashboardPage() {
         dashboardService.getRecentActivities().catch(() => [])
       ]);
 
-      // Assign fetched data or fallback defaults
       setMetrics(metricsData || {
         total_employees: 142, open_positions: 12, pending_reviews: 5, new_hires_this_month: 8
       });

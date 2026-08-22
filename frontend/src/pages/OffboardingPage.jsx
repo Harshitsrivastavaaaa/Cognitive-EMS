@@ -8,6 +8,14 @@ import { employeesService } from '../services/employees';
 import api from '../services/api';
 import logoSrc from '../assets/logo.png';
 
+// Simplified Glass Theme
+const glassCardStyle = "bg-white/80 border border-slate-200 shadow-sm backdrop-blur-lg rounded-2xl";
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+};
+
 export default function OffboardingPage() {
   const { user } = useAuth();
   const [employees, setEmployees] = useState([]);
@@ -133,7 +141,6 @@ export default function OffboardingPage() {
     doc.setTextColor(20, 20, 20);
     doc.text("For Hash AI LLC,", 14, 150);
 
-    // Create signature image using Canvas
     const canvas = document.createElement('canvas');
     canvas.width = 300;
     canvas.height = 100;
@@ -156,12 +163,10 @@ export default function OffboardingPage() {
     doc.setTextColor(150, 150, 150);
     doc.text("This is an official document of Hash AI LLC.", 14, 280);
 
-    // Save PDF locally
     const pdfFilename = `Experience_Certificate_${selectedEmployee.first_name}_${selectedEmployee.last_name}.pdf`;
     const pdfBlob = doc.output('blob');
     doc.save(pdfFilename);
 
-    // Auto-upload Experience Letter PDF to Document Vault for this employee
     try {
       const formDataPayload = new FormData();
       formDataPayload.append('employee_id', selectedEmployee.id);
@@ -175,13 +180,12 @@ export default function OffboardingPage() {
       console.error('Failed to auto-save Experience Letter to vault:', uploadErr);
     }
 
-    // Mark as Alumni in Employee Directory
     try {
       await employeesService.update(selectedEmployee.id, {
         status: 'alumni'
       });
       alert('Experience letter generated and employee moved to Alumni section successfully!');
-      fetchEmployees(); // Refresh list to remove the offboarded employee
+      fetchEmployees();
     } catch (err) {
       console.error('Failed to update employee status:', err);
       alert('Experience letter generated, but failed to sync status to Employee Directory.');
@@ -189,45 +193,54 @@ export default function OffboardingPage() {
   };
 
   return (
-    <div className="p-8 relative z-10 w-full min-h-screen font-sans flex flex-col">
-      <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-rose-500/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-orange-500/10 rounded-full blur-[120px]" />
-      </div>
-
-      <div className="mb-10">
-        <h1 className="text-4xl font-black italic tracking-tighter text-white mb-2 flex items-center gap-4">
-          <div className="p-3 bg-rose-500/20 rounded-2xl text-rose-400 border border-rose-500/20">
-            <UserMinus size={28} />
+    <motion.div 
+      className="w-full h-full p-6 lg:p-10 text-slate-900 space-y-8 pb-24"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {/* HEADER SECTION */}
+      <motion.div variants={containerVariants} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <div className="flex items-center gap-2 mb-1 text-slate-500 text-xs font-semibold">
+            <UserMinus size={14} className="text-blue-600" />
+            <span className="uppercase tracking-widest">Recruitment & Staffing</span>
           </div>
-          Offboarding Hub
-        </h1>
-        <p className="text-sm font-medium text-slate-400 tracking-wide">Generate experience letters and manage exits</p>
-      </div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+            Offboarding <span className="text-blue-600">Hub</span>
+          </h1>
+          <p className="text-sm text-slate-600 mt-1">Generate experience letters and manage exits</p>
+        </div>
+      </motion.div>
 
-      <div className="flex flex-col lg:flex-row gap-8 flex-1">
+      {/* MAIN CONTENT AREA */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
         {/* Form Section */}
-        <div className="w-full lg:w-1/3 bg-[#0a0a0c] border border-white/5 rounded-3xl p-8 backdrop-blur-xl h-fit shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/5 rounded-full blur-[80px]" />
-
-          <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            <FileText className="text-rose-500" />
-            Exit Details
-          </h2>
-
-          <div className="space-y-5 relative z-10">
+        <motion.div variants={containerVariants} className={`lg:col-span-5 ${glassCardStyle} p-6 md:p-8 space-y-6 h-fit shadow-sm`}>
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
+              <FileText size={20} />
+            </div>
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Select Employee</label>
+              <h2 className="text-lg font-bold text-slate-900">Exit Details</h2>
+              <p className="text-xs text-slate-500">Configure separation details</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Select Employee</label>
               {loading ? (
-                <div className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 flex items-center gap-2 text-slate-400 text-sm">
-                  <Loader2 size={16} className="animate-spin" />
+                <div className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 flex items-center gap-2 text-slate-500 text-sm">
+                  <Loader2 size={16} className="animate-spin text-blue-600" />
                   Loading active network...
                 </div>
               ) : (
-                <select name="employeeId" value={formData.employeeId} onChange={handleChange} className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-rose-500/50">
-                  <option value="" className="bg-[#0f0f11]">-- Select Active Employee --</option>
+                <select name="employeeId" value={formData.employeeId} onChange={handleChange} className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
+                  <option value="">-- Select Active Employee --</option>
                   {employees.map(emp => (
-                    <option key={emp.id} value={emp.id} className="bg-[#0f0f11]">
+                    <option key={emp.id} value={emp.id}>
                       {emp.first_name} {emp.last_name} ({emp.role})
                     </option>
                   ))}
@@ -236,107 +249,107 @@ export default function OffboardingPage() {
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Last Working Day</label>
-              <input type="date" name="lastWorkingDay" value={formData.lastWorkingDay} onChange={handleChange} className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-slate-300 focus:outline-none focus:border-rose-500/50 color-scheme-dark" />
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Last Working Day</label>
+              <input type="date" name="lastWorkingDay" value={formData.lastWorkingDay} onChange={handleChange} className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Conduct/Performance</label>
-              <select name="conduct" value={formData.conduct} onChange={handleChange} className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-rose-500/50">
-                <option value="excellent" className="bg-[#0f0f11]">Excellent / Highly Recommended</option>
-                <option value="good" className="bg-[#0f0f11]">Good / Satisfactory</option>
-                <option value="standard" className="bg-[#0f0f11]">Standard</option>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Conduct/Performance</label>
+              <select name="conduct" value={formData.conduct} onChange={handleChange} className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
+                <option value="excellent">Excellent / Highly Recommended</option>
+                <option value="good">Good / Satisfactory</option>
+                <option value="standard">Standard</option>
               </select>
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Reason for Exit</label>
-              <select name="reason" value={formData.reason} onChange={handleChange} className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-rose-500/50">
-                <option value="resignation" className="bg-[#0f0f11]">Resignation</option>
-                <option value="termination" className="bg-[#0f0f11]">Termination / Layoff</option>
-                <option value="contract_end" className="bg-[#0f0f11]">Contract Completed</option>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Reason for Exit</label>
+              <select name="reason" value={formData.reason} onChange={handleChange} className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
+                <option value="resignation">Resignation</option>
+                <option value="termination">Termination / Layoff</option>
+                <option value="contract_end">Contract Completed</option>
               </select>
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Admin / Signatory Name</label>
-              <input type="text" name="signatoryName" value={formData.signatoryName} onChange={handleChange} placeholder="Harshit Srivastava" className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-rose-500/50" />
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin / Signatory Name</label>
+              <input type="text" name="signatoryName" value={formData.signatoryName} onChange={handleChange} placeholder="Harshit Srivastava" className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
             </div>
 
-            <button onClick={generatePDF} disabled={!selectedEmployee} className="w-full mt-4 py-4 bg-rose-500 hover:bg-rose-600 disabled:opacity-50 disabled:hover:bg-rose-500 text-white font-bold rounded-xl flex justify-center items-center gap-2 transition-all shadow-[0_0_20px_-5px_#f43f5e]">
-              <Download size={18} />
+            <button onClick={generatePDF} disabled={!selectedEmployee} className="w-full mt-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-600 text-white font-bold text-sm rounded-xl flex justify-center items-center gap-2 transition-all shadow-sm">
+              <Download size={16} />
               Download PDF
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Live Preview Section */}
-        <div className="w-full lg:w-2/3 bg-white text-[#3c3c3c] p-10 rounded-3xl shadow-xl h-fit min-h-[600px] font-sans">
-          {/* Header */}
-          <div className="flex items-center gap-4 mb-4">
-            <img src={logoSrc} alt="Hash# Logo" className="h-10 object-contain" />
-            <div>
-              <h1 className="text-2xl font-semibold text-[#282828]">Hash AI LLC</h1>
-              <p className="text-sm text-[#646464]">Experience Certificate</p>
+        <motion.div variants={containerVariants} className={`lg:col-span-7 ${glassCardStyle} p-8 md:p-10 text-slate-800 h-fit min-h-[600px] shadow-sm`}>
+          <div className="flex items-center justify-between border-b border-slate-200 pb-6 mb-6">
+            <div className="flex items-center gap-3">
+              <img src={logoSrc} alt="Hash# Logo" className="h-8 object-contain" />
+              <div>
+                <h1 className="text-xl font-bold text-slate-900">Hash AI LLC</h1>
+                <p className="text-xs text-slate-500">Experience Certificate</p>
+              </div>
             </div>
+            <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full border border-blue-200">Live Preview</span>
           </div>
 
-          <div className="w-full h-px bg-[#dcdcdc] mb-6"></div>
-
-          <div className="space-y-6 text-[15px]">
-            <div className="flex justify-between text-[#141414]">
+          <div className="space-y-6 text-sm">
+            <div className="flex justify-between text-slate-700 font-medium">
               <span>Date: {format(new Date(), 'MMMM dd, yyyy')}</span>
             </div>
 
             <div className="pt-2">
-              <p className="font-bold text-[#141414]">To Whomsoever It May Concern,</p>
+              <p className="font-bold text-slate-900">To Whomsoever It May Concern,</p>
             </div>
 
             {selectedEmployee ? (
-              <>
-                <p className="leading-relaxed text-justify">
-                  This is to certify that <span className="font-semibold bg-rose-100 px-1">{selectedEmployee.first_name} {selectedEmployee.last_name}</span> was employed with Hash AI LLC from <span className="font-semibold bg-rose-100 px-1">{selectedEmployee.date_of_joining ? format(new Date(selectedEmployee.date_of_joining), 'MMMM dd, yyyy') : '[Join Date]'}</span> to <span className="font-semibold bg-rose-100 px-1">{formData.lastWorkingDay ? format(new Date(formData.lastWorkingDay), 'MMMM dd, yyyy') : '[Last Working Day]'}</span>. During this tenure, they held the position of <span className="font-semibold bg-rose-100 px-1">{selectedEmployee.role || selectedEmployee.position || '[Role]'}</span>.
+              <div className="space-y-4">
+                <p className="leading-relaxed text-slate-600 text-justify">
+                  This is to certify that <span className="font-semibold text-blue-700 bg-blue-50 px-1 py-0.5 rounded">{selectedEmployee.first_name} {selectedEmployee.last_name}</span> was employed with Hash AI LLC from <span className="font-semibold text-slate-800">{selectedEmployee.date_of_joining ? format(new Date(selectedEmployee.date_of_joining), 'MMMM dd, yyyy') : '[Join Date]'}</span> to <span className="font-semibold text-slate-800">{formData.lastWorkingDay ? format(new Date(formData.lastWorkingDay), 'MMMM dd, yyyy') : '[Last Working Day]'}</span>. During this tenure, they held the position of <span className="font-semibold text-blue-700 bg-blue-50 px-1 py-0.5 rounded">{selectedEmployee.role || selectedEmployee.position || '[Role]'}</span>.
                 </p>
 
                 {formData.conduct === 'excellent' && (
-                  <p className="leading-relaxed text-justify">
+                  <p className="leading-relaxed text-slate-600 text-justify">
                     During their employment, we found them to be a dedicated, hardworking, and highly motivated professional. They consistently delivered excellent results and were a valuable member of our team.
                   </p>
                 )}
                 {formData.conduct === 'good' && (
-                  <p className="leading-relaxed text-justify">
+                  <p className="leading-relaxed text-slate-600 text-justify">
                     During their employment, they fulfilled their responsibilities well and maintained a good professional standard.
                   </p>
                 )}
 
-                <p className="leading-relaxed text-justify">
+                <p className="leading-relaxed text-slate-600 text-justify">
                   {formData.reason === 'resignation'
                     ? 'They are leaving the organization on their own accord. We wish them all the best in their future endeavors.'
                     : 'We wish them success in their future endeavors.'}
                 </p>
-              </>
+              </div>
             ) : (
               <div className="text-slate-400 italic text-center py-20 border-2 border-dashed border-slate-200 rounded-xl">
                 Please select an employee to generate the experience letter preview.
               </div>
             )}
 
-            <div className="pt-20">
-              <p className="text-[#141414]">For Hash AI LLC,</p>
-              <div className="h-16 flex items-end">
-                <p className="font-signature text-4xl text-slate-900 -rotate-3 -ml-2">{adminName}</p>
+            <div className="pt-8 border-t border-slate-100">
+              <p className="text-slate-900">For Hash AI LLC,</p>
+              <div className="h-14 flex items-end">
+                <p className="font-signature text-3xl text-slate-900 -rotate-3 -ml-1">{adminName}</p>
               </div>
-              <p className="font-bold text-[#141414] mt-1">{adminName}</p>
-              <p>Director / HR Head</p>
+              <p className="font-bold text-slate-900 mt-1">{adminName}</p>
+              <p className="text-xs text-slate-500">Director / HR Head</p>
             </div>
 
-            {/* Footer */}
-            <div className="pt-20 text-sm text-[#969696]">
+            <div className="pt-6 text-xs text-slate-400 border-t border-slate-100">
               This is an official document of Hash AI LLC.
             </div>
           </div>
-        </div>
+        </motion.div>
+
       </div>
-    </div>
+    </motion.div>
   );
 }

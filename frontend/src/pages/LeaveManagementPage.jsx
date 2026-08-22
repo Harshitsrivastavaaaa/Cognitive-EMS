@@ -3,15 +3,13 @@ import { motion } from 'framer-motion'
 import { Calendar, CheckCircle, XCircle, Clock, Filter, MessageSquare } from 'lucide-react'
 import { leaveService } from '../services/leave'
 
-const floatingBlob = {
-  animate: {
-    y: [0, -30, 0],
-    x: [0, 15, 0],
-    scale: [1, 1.05, 1],
-    rotate: [0, 5, -5, 0],
-    transition: { duration: 18, repeat: Infinity, ease: "easeInOut" },
-  },
-}
+// Simplified Glass Theme
+const glassCardStyle = "bg-white/80 border border-slate-200 shadow-sm backdrop-blur-lg rounded-2xl";
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+};
 
 export default function LeaveManagementPage() {
   const [requests, setRequests] = useState([])
@@ -52,48 +50,47 @@ export default function LeaveManagementPage() {
   const statusBadge = (st) => {
     switch (st) {
       case 'approved':
-        return <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 rounded-lg flex items-center gap-1 w-fit"><CheckCircle size={12} /> Approved</span>
+        return <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg flex items-center gap-1 w-fit"><CheckCircle size={12} /> Approved</span>
       case 'rejected':
-        return <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-red-500/10 border border-red-500/20 text-red-300 rounded-lg flex items-center gap-1 w-fit"><XCircle size={12} /> Rejected</span>
+        return <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200 rounded-lg flex items-center gap-1 w-fit"><XCircle size={12} /> Rejected</span>
       default:
-        return <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 rounded-lg flex items-center gap-1 w-fit"><Clock size={12} /> Pending</span>
+        return <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200 rounded-lg flex items-center gap-1 w-fit"><Clock size={12} /> Pending</span>
     }
   }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="w-8 h-8 border-2 border-violet-500/20 border-t-violet-500 rounded-full animate-spin" />
+      <div className="flex items-center justify-center h-full py-20">
+        <div className="w-8 h-8 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="relative min-h-screen bg-[#050505] text-white p-6 md:p-8 font-sans selection:bg-orange-500/30 overflow-y-auto custom-scrollbar overflow-x-hidden">
-      {/* Background Neon Blobs */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <motion.div variants={floatingBlob} initial="animate" animate={{ ...floatingBlob.animate, backgroundColor: ["#7c3aed", "#ea580c", "#7c3aed"] }} transition={{ ...floatingBlob.animate.transition, backgroundColor: { duration: 20, repeat: Infinity, ease: "linear" } }} className="absolute -top-[10%] -left-[10%] w-[800px] h-[800px] rounded-full blur-[140px] opacity-20 mix-blend-screen" />
-        <motion.div variants={floatingBlob} initial="animate" animate={{ ...floatingBlob.animate, backgroundColor: ["#db2777", "#7c3aed", "#db2777"] }} transition={{ ...floatingBlob.animate.transition, delay: 2, backgroundColor: { duration: 25, repeat: Infinity, ease: "linear" } }} className="absolute top-[30%] -right-[10%] w-[700px] h-[700px] rounded-full blur-[130px] opacity-20 mix-blend-screen" />
-      </div>
-
-      <div className="relative z-10 w-full space-y-6">
+    <div className="w-full h-full p-6 lg:p-10 text-slate-900 space-y-8 pb-24">
       {/* Header & Filter */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight">Leave Approvals & Management</h1>
-          <p className="text-xs text-slate-500 mt-1">Review and approve employee time-off and PTO applications</p>
+          <div className="flex items-center gap-2 mb-1 text-slate-500 text-xs font-semibold">
+            <Calendar size={14} className="text-blue-600" />
+            <span className="uppercase tracking-widest">Time-Off Control</span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+            Leave Approvals & <span className="text-blue-600">Management</span>
+          </h1>
+          <p className="text-sm text-slate-600 mt-1">Review and approve employee time-off and PTO applications</p>
         </div>
 
         {/* Filter Pills */}
-        <div className="flex bg-[#121214] border border-white/10 rounded-xl p-1 w-fit">
+        <div className="flex bg-white/80 backdrop-blur-lg border border-slate-200 rounded-xl p-1 w-fit shadow-sm">
           {['all', 'pending', 'approved', 'rejected'].map((st) => (
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-bold capitalize transition-all ${
                 statusFilter === st
-                  ? 'bg-violet-500/20 border border-violet-500/30 text-violet-300'
-                  : 'text-slate-500 hover:text-slate-300'
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
               }`}
             >
               {st}
@@ -103,38 +100,38 @@ export default function LeaveManagementPage() {
       </motion.div>
 
       {/* Requests List */}
-      <div className="bg-[#0a0a0c] border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl">
-        <div className="px-6 py-4 border-b border-white/[0.06]">
-          <h2 className="text-sm font-bold text-white">Submitted Leave Applications</h2>
-          <p className="text-[10px] text-slate-500">{requests.length} records</p>
+      <motion.div variants={containerVariants} initial="hidden" animate="visible" className={`${glassCardStyle} overflow-hidden shadow-sm`}>
+        <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+          <h2 className="text-sm font-bold text-slate-900">Submitted Leave Applications</h2>
+          <p className="text-xs text-slate-500">{requests.length} records</p>
         </div>
 
         {requests.length > 0 ? (
-          <div className="divide-y divide-white/[0.04]">
+          <div className="divide-y divide-slate-100">
             {requests.map((r) => (
-              <div key={r.id} className="p-6 space-y-4 hover:bg-white/[0.02] transition-colors">
+              <div key={r.id} className="p-6 space-y-4 hover:bg-slate-50/50 transition-colors">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-300 font-bold text-xs shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-700 border border-blue-200 flex items-center justify-center font-bold text-xs shrink-0">
                       {r.employee_name ? r.employee_name.split(' ').map(n => n[0]).join('') : '?'}
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-white">{r.employee_name}</h3>
-                      <p className="text-[11px] text-slate-400">{r.employee_email} · <span className="text-slate-500">{r.department}</span></p>
+                      <h3 className="text-sm font-bold text-slate-900">{r.employee_name}</h3>
+                      <p className="text-xs text-slate-500">{r.employee_email} · <span className="text-slate-600 font-medium">{r.department}</span></p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold text-slate-300 uppercase tracking-wide px-3 py-1 bg-white/5 border border-white/10 rounded-lg">
+                    <span className="text-xs font-bold text-slate-700 uppercase tracking-wide px-3 py-1 bg-slate-100 border border-slate-200 rounded-lg">
                       {r.leave_type} Leave
                     </span>
                     {statusBadge(r.status)}
                   </div>
                 </div>
 
-                <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 space-y-2 text-xs">
-                  <p className="text-slate-300 font-medium">📅 Date Range: <span className="text-white font-bold">{r.start_date}</span> to <span className="text-white font-bold">{r.end_date}</span></p>
-                  {r.reason && <p className="text-slate-400 italic">"{r.reason}"</p>}
+                <div className="bg-slate-50 border border-slate-200/60 rounded-xl p-4 space-y-2 text-xs">
+                  <p className="text-slate-700 font-medium">📅 Date Range: <span className="text-slate-900 font-bold">{r.start_date}</span> to <span className="text-slate-900 font-bold">{r.end_date}</span></p>
+                  {r.reason && <p className="text-slate-600 italic">"{r.reason}"</p>}
                 </div>
 
                 {/* Review Action Controls */}
@@ -145,20 +142,20 @@ export default function LeaveManagementPage() {
                       placeholder="Add reviewer note (optional)..."
                       value={noteMap[r.id] || ''}
                       onChange={(e) => setNoteMap({ ...noteMap, [r.id]: e.target.value })}
-                      className="flex-1 p-2.5 text-xs bg-[#121214] border border-white/10 rounded-xl text-white placeholder:text-slate-600 focus:outline-none focus:border-violet-500/50"
+                      className="flex-1 p-2.5 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
                     />
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleAction(r.id, 'approved')}
                         disabled={processingId === r.id}
-                        className="px-4 py-2.5 bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bold rounded-xl hover:bg-emerald-500/30 transition-all flex items-center gap-1.5 disabled:opacity-50"
+                        className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 disabled:opacity-50 shadow-sm"
                       >
                         <CheckCircle size={14} /> Approve
                       </button>
                       <button
                         onClick={() => handleAction(r.id, 'rejected')}
                         disabled={processingId === r.id}
-                        className="px-4 py-2.5 bg-red-500/20 border border-red-500/30 text-red-300 text-xs font-bold rounded-xl hover:bg-red-500/30 transition-all flex items-center gap-1.5 disabled:opacity-50"
+                        className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 disabled:opacity-50 shadow-sm"
                       >
                         <XCircle size={14} /> Reject
                       </button>
@@ -166,8 +163,8 @@ export default function LeaveManagementPage() {
                   </div>
                 ) : (
                   r.reviewer_note && (
-                    <p className="text-xs text-slate-400 italic">
-                      💬 Reviewer Note: <span className="text-slate-300">{r.reviewer_note}</span>
+                    <p className="text-xs text-slate-600 italic">
+                      💬 Reviewer Note: <span className="text-slate-800">{r.reviewer_note}</span>
                     </p>
                   )
                 )}
@@ -175,13 +172,12 @@ export default function LeaveManagementPage() {
             ))}
           </div>
         ) : (
-          <div className="px-6 py-12 text-center text-slate-500 text-xs">
-            <Calendar size={32} className="mx-auto mb-3 text-slate-600" />
+          <div className="px-6 py-16 text-center text-slate-500 text-xs">
+            <Calendar size={32} className="mx-auto mb-3 text-slate-400 opacity-60" />
             No leave requests matching the selected filter
           </div>
         )}
-      </div>
-    </div>
+      </motion.div>
     </div>
   )
 }
