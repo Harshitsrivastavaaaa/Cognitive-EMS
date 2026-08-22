@@ -60,7 +60,7 @@ export default function Sidebar() {
               exit={{ opacity: 0 }}
               className="text-sm font-black tracking-tight text-slate-900 whitespace-nowrap"
             >
-              Hash#AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 font-bold">EXCVBNM</span>
+              Hash#AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 font-bold">EMS</span>
             </motion.span>
           )}
         </div>

@@ -30,7 +30,7 @@ const Navbar = ({ scrolled }) => {
           className="flex items-center gap-3 cursor-pointer group"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
-          <div className="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50 border border-blue-200 p-1.5 group-hover:scale-105 transition-transform shadow-xs">
+          <div className="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200/80 p-1.5 group-hover:scale-105 transition-transform shadow-xs">
              <img 
                src={logo} 
                alt="Hash# Logo" 
@@ -38,8 +38,10 @@ const Navbar = ({ scrolled }) => {
              />
           </div>
           <div className="flex flex-col">
-            <span className="font-extrabold text-base tracking-tight text-slate-900 leading-tight">Hash#AI</span>
-            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest leading-none mt-0.5">E M S</span>
+            <span className="font-black text-base tracking-tighter text-slate-900 leading-tight">
+              HASH<span className="text-blue-600">#</span>AI
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mt-0.5">E M S</span>
           </div>
         </Link>
 

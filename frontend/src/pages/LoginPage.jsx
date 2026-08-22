@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle, Building2, UserCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import '@/index.css'
-import AkiyamLogo from "../assets/logo.png";
+import Hashailogo from "../assets/logo.png";
 import Navbar from "../components/layout/Navbar"
 
 export default function LoginPage() {
@@ -56,18 +56,19 @@ export default function LoginPage() {
                 {/* Info Column (Left) */}
                 <div className="hidden lg:flex flex-col justify-between w-[45%] py-10 px-8 bg-slate-50/50 border-r border-slate-200 relative overflow-hidden">
                     <div className="relative z-10 space-y-6">
-                        <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-sm">
+                        {/* Logo Box with Curved Edges */}
+                        <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200/80 p-2 flex items-center justify-center shadow-sm">
                             <img 
-                                src={AkiyamLogo} 
-                                alt="Hash# Logo" 
-                                className="w-7 h-7 object-contain" 
+                                src={Hashailogo} 
+                                alt="Hash#AI Logo" 
+                                className="w-full h-full object-contain" 
                             />
                         </div>
                         <div>
                           <h1 className="text-3xl font-bold tracking-tight text-slate-900 leading-tight">
-                              Hash# <br/>
+                              Hash#AI <br/>
                               <span className="text-blue-600 font-bold">
-                                 Workspace
+                                  Automated Employee Management System
                               </span>
                           </h1>
                           <p className="text-slate-500 text-sm mt-3 leading-relaxed">
@@ -91,7 +92,7 @@ export default function LoginPage() {
                     </div>
 
                     <div className="relative z-10 text-[10px] font-bold text-slate-400 tracking-wider uppercase mt-12">
-                        <span>Hash# Tech © 2026</span>
+                        <span>Hash#AI © 2026</span>
                     </div>
                 </div>
 
