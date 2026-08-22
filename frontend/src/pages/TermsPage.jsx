@@ -74,3 +74,6 @@ export default function TermsPage() {
     </div>
   );
 }
+
+/* ENDS HERE */
+/* Checked - HARSHIT SRIVASTAVA */
