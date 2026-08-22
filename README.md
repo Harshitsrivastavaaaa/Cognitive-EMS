@@ -1,4 +1,4 @@
-# Hash# Employee Management System (HRMS)
+# Hash#AI Employee Management System (EMS)
 
 A modern, full-stack AI-ready Employee & Human Resource Management platform built with **FastAPI** (Python 3.10+) and **React** (Vite + Tailwind CSS).
 
