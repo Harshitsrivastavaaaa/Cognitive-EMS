@@ -19,7 +19,7 @@ export default function Titlebar() {
     return (
         <div className="titlebar">
             <div className="titlebar-drag-area">
-                <span className="titlebar-title">Hash# Solutions HRMS</span>
+                <span className="titlebar-title">Hash#AI EMS</span>
             </div>
             <div className="titlebar-controls">
                 <button className="titlebar-button" onClick={handleMinimize}>
@@ -37,4 +37,4 @@ export default function Titlebar() {
 }
 
 /* ENDS HERE */
-/* Checked - HARSHIT SRIVASTAVA (Harshit@akiyam.in) */
+/* Checked - HARSHIT SRIVASTAVA */
