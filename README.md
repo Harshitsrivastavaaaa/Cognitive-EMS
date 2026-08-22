@@ -1,10 +1,49 @@
-# Hash# Employee Management System (HRMS)
+🚀 Overview
+Hash#AI EMS is a comprehensive solution for streamlining internal operations, personnel directory management, tracking project allocations, processing complex payroll structures, and handling end-to-end employee lifecycles (joining to offboarding).
 
-A modern, full-stack AI-ready Employee & Human Resource Management platform built with **FastAPI** (Python 3.10+) and **React** (Vite + Tailwind CSS).
+Featuring a polished light glassmorphic interface and robust backend integration, it bridges the gap between administrative oversight and employee self-service capabilities.
 
----
+✨ Key Features
+📊 Executive Dashboard & Analytics
+Real-time Metrics: Instant visibility into total headcount, active job positions, pending leave approvals, and monthly acquisition velocity.
 
-## ⚡ Quick Start (Run in under 2 minutes)
+Interactive Visualizations: Integrated line and donut charts tracking departmental headcount distributions, portfolio health, and hiring trends.
+
+👥 Human Resources & Directory
+Personnel Directory: Advanced search, filtering by department, and status toggles for active employees vs. alumni.
+
+Profile Vault: Detailed employee records including role management, location tracking, and document attachments.
+
+Data Portability: One-click Excel/CSV data exports and automated bulk data imports.
+
+🛠️ Project & Resource Allocation Hub
+Portfolio Tracking: Manage project deadlines, budgets, client sponsors, and deliverables (Active, Planning, Completed, On Hold).
+
+Team Assignment: Easily assign engineers and personnel to specific projects with dedicated role definitions.
+
+💰 Automated Salary & Payroll Processing
+Payroll Execution: Calculate individual or bulk monthly payroll transactions.
+
+Statutory Deductions: Built-in tracking for Provident Fund (PF) and Tax Deducted at Source (TDS).
+
+Automated Payslip Generator: Instant PDF generation and download for formal payroll records using jsPDF.
+
+📝 Lifecycle Management (Onboarding & Offboarding)
+Onboarding Hub: Generate professional offer letters with live UI previews and auto-save generated PDFs directly to the candidate's Document Vault.
+
+Offboarding Hub: Streamline exits, generate experience certificates, and automatically transition employee profiles to alumni status.
+
+📋 Attendance & Leave Approvals
+Roster Tracking: Daily attendance logging (Present, Absent, Late) with real-time project task updates.
+
+Leave Management: PTO and time-off request review workflow with custom administrator notes and status updates.
+
+🔒 Enterprise Security & Administration
+Role-Based Access Control: Secure boundaries between employer/admin controls and employee portals.
+
+Credential Provisioning: Secure employee account creation and activation toggling.
+
+Document Vault: Centralized repository for candidate resumes, ID proofs, contracts, and official letters.
 
 ### 1. Start the Backend (Terminal 1)
 
@@ -233,4 +272,4 @@ All API endpoints are prefixed with `/api/v1`:
 
 ## 📄 License
 
-Hash# Employee Management System. All rights reserved.
+Hash#AI Employee Management System. @2026 All rights reserved.

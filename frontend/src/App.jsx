@@ -31,6 +31,7 @@ import EmployeeProjectsPage from './pages/employee-portal/EmployeeProjectsPage'
 import EmployeeLeavePage from './pages/employee-portal/EmployeeLeavePage'
 import EmployeeMyDocumentsPage from './pages/employee-portal/EmployeeMyDocumentsPage'
 import LeaveManagementPage from './pages/LeaveManagementPage'
+import Footer from '../src/components/layout/Footer'
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
     const { isAuthenticated, role } = useAuth();
@@ -56,6 +57,7 @@ function AppRoutes() {
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/security" element={<SecurityPage />} />
                 <Route path="/docs" element={<DocsPage />} />
+                <Route path="/footer" element={<Footer />} />
                 
                 {/* Authentication */}
                 <Route path="/login" element={<LoginPage />} />
