@@ -1,37 +1,41 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate, HashRouter } from 'react-router-dom'
+import PageLoader from './components/common/PageLoader'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { AppProvider } from './context/AppContext'
 import MainLayout from './components/layout/MainLayout'
-import LoginPage from './pages/LoginPage'
-import LandingPage from './pages/LandingPage'
-import DashboardPage from './pages/DashboardPage'
-import EmployeesListPage from './pages/EmployeesListPage'
-import EmployeeProfilePage from './pages/EmployeeProfilePage'
-import ProjectsPage from './pages/ProjectsPage'
-import Settings from './pages/Settings'
-import AttendancePage from './pages/AttendancePage'
-import SalaryPage from './pages/SalaryPage'
-import AboutPage from './components/layout/AboutPage'
-import Contact from './pages/Contact'
-import ProductPage from './pages/ProductPage'
-import CareersPage from './pages/CareersPage'
-import PrivacyPage from './pages/PrivacyPage'
-import TermsPage from './pages/TermsPage'
-import SecurityPage from './pages/SecurityPage'
-import DocsPage from './pages/DocsPage'
-import ScrollToTop from './components/layout/ScrollToTop'
-import OnboardingPage from './pages/OnboardingPage'
-import OffboardingPage from './pages/OffboardingPage'
-import DocumentsPage from './pages/DocumentsPage';
 import EmployeePortalLayout from './components/layout/EmployeePortalLayout'
-import EmployeePortalDashboard from './pages/employee-portal/EmployeePortalDashboard'
-import EmployeeMyProfile from './pages/employee-portal/EmployeeMyProfile'
-import EmployeeAttendancePage from './pages/employee-portal/EmployeeAttendancePage'
-import EmployeeProjectsPage from './pages/employee-portal/EmployeeProjectsPage'
-import EmployeeLeavePage from './pages/employee-portal/EmployeeLeavePage'
-import EmployeeMyDocumentsPage from './pages/employee-portal/EmployeeMyDocumentsPage'
-import LeaveManagementPage from './pages/LeaveManagementPage'
-import Footer from '../src/components/layout/Footer'
+import ScrollToTop from './components/layout/ScrollToTop'
+
+// Pages are code-split so the first load only downloads the page being opened
+const LoginPage = lazy(() => import('./pages/LoginPage'))
+const LandingPage = lazy(() => import('./pages/LandingPage'))
+const DashboardPage = lazy(() => import('./pages/DashboardPage'))
+const EmployeesListPage = lazy(() => import('./pages/EmployeesListPage'))
+const EmployeeProfilePage = lazy(() => import('./pages/EmployeeProfilePage'))
+const ProjectsPage = lazy(() => import('./pages/ProjectsPage'))
+const Settings = lazy(() => import('./pages/Settings'))
+const AttendancePage = lazy(() => import('./pages/AttendancePage'))
+const SalaryPage = lazy(() => import('./pages/SalaryPage'))
+const AboutPage = lazy(() => import('./components/layout/AboutPage'))
+const Contact = lazy(() => import('./pages/Contact'))
+const ProductPage = lazy(() => import('./pages/ProductPage'))
+const CareersPage = lazy(() => import('./pages/CareersPage'))
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'))
+const TermsPage = lazy(() => import('./pages/TermsPage'))
+const SecurityPage = lazy(() => import('./pages/SecurityPage'))
+const DocsPage = lazy(() => import('./pages/DocsPage'))
+const OnboardingPage = lazy(() => import('./pages/OnboardingPage'))
+const OffboardingPage = lazy(() => import('./pages/OffboardingPage'))
+const DocumentsPage = lazy(() => import('./pages/DocumentsPage'))
+const EmployeePortalDashboard = lazy(() => import('./pages/employee-portal/EmployeePortalDashboard'))
+const EmployeeMyProfile = lazy(() => import('./pages/employee-portal/EmployeeMyProfile'))
+const EmployeeAttendancePage = lazy(() => import('./pages/employee-portal/EmployeeAttendancePage'))
+const EmployeeProjectsPage = lazy(() => import('./pages/employee-portal/EmployeeProjectsPage'))
+const EmployeeLeavePage = lazy(() => import('./pages/employee-portal/EmployeeLeavePage'))
+const EmployeeMyDocumentsPage = lazy(() => import('./pages/employee-portal/EmployeeMyDocumentsPage'))
+const LeaveManagementPage = lazy(() => import('./pages/LeaveManagementPage'))
+const Footer = lazy(() => import('../src/components/layout/Footer'))
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
     const { isAuthenticated, role } = useAuth();
@@ -46,6 +50,7 @@ function AppRoutes() {
     return (
         <div className="app-container min-h-screen bg-slate-50 text-slate-900 font-sans">
             <ScrollToTop />
+            <Suspense fallback={<PageLoader fullScreen />}>
             <Routes>
                 {/* Public Marketing Routes */}
                 <Route path="/" element={<LandingPage />} />
@@ -90,6 +95,7 @@ function AppRoutes() {
                 {/* Fallback */}
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
+            </Suspense>
         </div>
     );
 }

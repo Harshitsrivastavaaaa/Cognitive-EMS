@@ -45,7 +45,29 @@
   --glass-bg: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(226, 232, 240, 0.8);
   --accent-glow: 0 12px 40px rgba(37, 99, 235, 0.12);
+  /* Global UI scale. Phones/tablets stay at 100% so small labels remain readable. */
+  --app-zoom: 1;
 }
+
+@media (min-width: 1024px) {
+  :root { --app-zoom: 0.75; }
+}
+
+html {
+  zoom: var(--app-zoom);
+}
+
+/*
+ * zoom also shrinks viewport units, so a 100vh layout would only fill 75% of the
+ * window. Divide by the zoom factor so these still map to the real viewport.
+ * Unlayered on purpose so they override Tailwind's utilities.
+ */
+.h-screen { height: calc(100dvh / var(--app-zoom)); }
+.min-h-screen { min-height: calc(100dvh / var(--app-zoom)); }
+.h-\[60vh\] { height: calc(60dvh / var(--app-zoom)); }
+.min-h-\[60vh\] { min-height: calc(60dvh / var(--app-zoom)); }
+.max-h-\[90vh\] { max-height: calc(90dvh / var(--app-zoom)); }
+.max-w-\[85vw\] { max-width: calc(85vw / var(--app-zoom)); }
 
 @layer utilities {
   .text-gradient {

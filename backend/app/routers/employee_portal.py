@@ -7,6 +7,7 @@ from app.models import (
     Document, DocumentRead
 )
 from app.routers.auth import get_current_user
+from app.file_utils import checked_extension, save_upload, IMAGE_EXTENSIONS
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
@@ -90,13 +91,12 @@ def upload_profile_image(
     employee = _require_employee(current_user, session)
     
     # Generate unique filename
-    ext = os.path.splitext(file.filename)[1]
+    ext = checked_extension(file.filename, IMAGE_EXTENSIONS)
     unique_filename = f"emp_{employee.id}_{uuid.uuid4().hex[:8]}{ext}"
     file_path = os.path.join(UPLOAD_PROFILE_DIR, unique_filename)
-    
-    with open(file_path, "wb") as buffer:
-        buffer.write(file.file.read())
-        
+
+    save_upload(file, file_path, max_bytes=5 * 1024 * 1024)
+
     employee.profile_image_filename = f"profiles/{unique_filename}"
     session.add(employee)
     

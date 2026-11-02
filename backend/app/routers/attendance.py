@@ -3,10 +3,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from app.database import get_session
 from app.models import Employee, Attendance, Activity
-from app.routers.auth import get_current_user
+from app.routers.auth import get_current_user, require_employer
 from pydantic import BaseModel
 
-router = APIRouter(prefix="/attendance", tags=["attendance"])
+router = APIRouter(prefix="/attendance", tags=["attendance"], dependencies=[Depends(require_employer)])
 
 class AttendanceRecordIn(BaseModel):
     employee_id: int

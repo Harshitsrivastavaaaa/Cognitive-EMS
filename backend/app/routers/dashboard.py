@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select, func
 from app.database import get_session
 from app.models import Employee, Activity
-from app.routers.auth import get_current_user
+from app.routers.auth import get_current_user, require_employer
 from datetime import datetime
 
-router = APIRouter(prefix="/dashboard", tags=["dashboard"])
+router = APIRouter(prefix="/dashboard", tags=["dashboard"], dependencies=[Depends(require_employer)])
 
 @router.get("/metrics")
 def get_metrics(session: Session = Depends(get_session), current_user: str = Depends(get_current_user)):

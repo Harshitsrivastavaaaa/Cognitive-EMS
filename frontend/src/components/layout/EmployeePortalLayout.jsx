@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import PageLoader from '../common/PageLoader';
 import { Outlet, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -11,18 +12,18 @@ export default function EmployeePortalLayout() {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-[#050505] text-white font-sans">
+            <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 text-slate-900 font-sans">
                 <div className="relative flex items-center justify-center w-20 h-20 mb-6">
-                    <div className="absolute inset-0 rounded-full border-t-2 border-r-2 border-emerald-500/40 animate-spin"></div>
-                    <motion.img 
-                        src={AkiyamLogo} 
+                    <div className="absolute inset-0 rounded-full border-t-2 border-r-2 border-emerald-500 animate-spin"></div>
+                    <motion.img
+                        src={AkiyamLogo}
                         alt="Hash# Logo"
                         animate={{ scale: [0.9, 1.05, 0.9], opacity: [0.5, 1, 0.5] }}
                         transition={{ duration: 2, repeat: Infinity }}
-                        className="w-10 h-10 object-contain drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+                        className="w-10 h-10 object-contain drop-shadow-md"
                     />
                 </div>
-                <p className="text-emerald-400 text-xs font-bold tracking-[0.3em] uppercase animate-pulse">
+                <p className="text-emerald-600 text-xs font-bold tracking-[0.3em] uppercase animate-pulse">
                     Loading Portal...
                 </p>
             </div>
@@ -48,7 +49,9 @@ export default function EmployeePortalLayout() {
 
             <EmployeePortalSidebar />
             <main className="flex-1 overflow-y-auto no-scrollbar relative bg-transparent z-10 p-4 lg:p-6">
-                <Outlet />
+                <Suspense fallback={<PageLoader />}>
+                    <Outlet />
+                </Suspense>
             </main>
             <ToastContainer />
         </div>

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import PageLoader from '../common/PageLoader';
 import { Outlet, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -50,7 +51,9 @@ export default function MainLayout() {
             
             {/* Main Content Area (Padding removed so child pages can stretch to the edges) */}
             <main className="flex-1 overflow-y-auto no-scrollbar relative bg-transparent z-10">
-                <Outlet />
+                <Suspense fallback={<PageLoader />}>
+                    <Outlet />
+                </Suspense>
             </main>
 
             {/* Global Toasts */}

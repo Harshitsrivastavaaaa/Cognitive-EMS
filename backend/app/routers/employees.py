@@ -2,8 +2,8 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select, or_
 from app.database import get_session
-from app.models import Employee, EmployeeCreate, EmployeeRead, EmployeeUpdate, Activity
-from app.routers.auth import get_current_user
+from app.models import Employee, EmployeeCreate, EmployeeRead, EmployeeUpdate, Activity, User
+from app.routers.auth import get_current_user, require_employer
 
 router = APIRouter(prefix="/employees", tags=["employees"])
 
@@ -35,7 +35,7 @@ def list_employees(
     limit: int = 100,
     offset: int = 0,
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     query = select(Employee)
     
@@ -62,7 +62,7 @@ def list_employees(
 @router.get("/departments")
 def get_unique_departments(
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     from app.models import Department
     all_depts = session.exec(select(Department)).all()
@@ -79,7 +79,7 @@ def export_employees(
     department: Optional[str] = None,
     search: Optional[str] = None,
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     query = select(Employee)
     
@@ -147,7 +147,7 @@ def export_employees(
 def get_employee(
     employee_id: int,
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     emp = session.get(Employee, employee_id)
     if not emp:
@@ -158,7 +158,7 @@ def get_employee(
 def create_employee(
     emp_in: EmployeeCreate,
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     # Check if email exists
     existing = session.exec(select(Employee).where(Employee.email == emp_in.email)).first()
@@ -200,7 +200,7 @@ def update_employee(
     employee_id: int,
     emp_in: EmployeeUpdate,
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     emp = session.get(Employee, employee_id)
     if not emp:
@@ -231,7 +231,7 @@ def update_employee(
 def delete_employee(
     employee_id: int,
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     emp = session.get(Employee, employee_id)
     if not emp:
@@ -250,9 +250,9 @@ def delete_employee(
     return {"detail": "Employee deleted successfully"}
 
 import os
-import shutil
 from fastapi import File, UploadFile
 from fastapi.responses import FileResponse
+from app.file_utils import safe_filename, checked_extension, save_upload, DOCUMENT_EXTENSIONS
 
 UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -262,18 +262,19 @@ def upload_cv(
     employee_id: int,
     file: UploadFile = File(...),
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     emp = session.get(Employee, employee_id)
     if not emp:
         raise HTTPException(status_code=404, detail="Employee not found")
     
-    filename = f"cv_{employee_id}_{file.filename}"
+    original_name = safe_filename(file.filename)
+    checked_extension(original_name, DOCUMENT_EXTENSIONS)
+    filename = f"cv_{employee_id}_{original_name}"
     file_path = os.path.join(UPLOAD_DIR, filename)
-    
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-        
+
+    save_upload(file, file_path)
+
     emp.cv_filename = filename
     session.add(emp)
     session.commit()
@@ -284,8 +285,12 @@ def upload_cv(
 def download_cv(
     employee_id: int,
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
+    # Employees may only download their own CV
+    if current_user.role != "employer" and current_user.employee_id != employee_id:
+        raise HTTPException(status_code=403, detail="Not allowed to access this CV")
+
     emp = session.get(Employee, employee_id)
     if not emp or not emp.cv_filename:
         raise HTTPException(status_code=404, detail="CV not found")
@@ -305,7 +310,7 @@ def download_cv(
 def import_employees(
     file: UploadFile = File(...),
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     import openpyxl
     import csv
@@ -481,7 +486,7 @@ def import_employees(
 @router.post("/sync-github")
 async def sync_to_github(
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     import httpx
     import base64

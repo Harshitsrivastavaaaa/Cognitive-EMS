@@ -13,11 +13,6 @@ export function AuthProvider({ children }) {
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        if (token === 'demo-token') {
-            setLoading(false)
-            return;
-        }
-
         if (token) {
             // Avoid duplicate fetch if user state is already populated (e.g. freshly logged in)
             if (user && user.email) {
@@ -124,42 +119,23 @@ export function AuthProvider({ children }) {
         }
     }
 
+    // Only works when the backend runs with DEMO_MODE=true; throws otherwise
     const demoLogin = async () => {
-        try {
-            const response = await authService.directLogin()
-            if (response && response.access_token) {
-                localStorage.setItem('token', response.access_token)
-                localStorage.setItem('sessionId', response.session_id || 'direct-session')
-                
-                const demoUser = response.user || { email: 'admin@hash.ai', firstName: 'Harshit', lastName: 'Srivastava', role: 'employer' }
-                setUser(demoUser)
-                if (demoUser.role) {
-                    setRole(demoUser.role)
-                    localStorage.setItem('userRole', demoUser.role)
-                }
+        const response = await authService.directLogin()
+        localStorage.setItem('token', response.access_token)
+        localStorage.setItem('sessionId', response.session_id || 'direct-session')
 
-                setToken(response.access_token)
-                setSessionId(response.session_id || 'direct-session')
-                setError(null)
-                return response;
-            }
-        } catch (err) {
-            console.warn('Backend direct-login API call failed, using local session token fallback:', err)
+        const demoUser = response.user
+        setUser(demoUser)
+        if (demoUser?.role) {
+            setRole(demoUser.role)
+            localStorage.setItem('userRole', demoUser.role)
         }
 
-        const fakeToken = 'demo-token'
-        const fakeSession = 'demo-session'
-        const fakeUser = { email: 'admin@hash.ai', firstName: 'Harshit', lastName: 'Srivastava', role: 'employer' }
-
-        localStorage.setItem('token', fakeToken)
-        localStorage.setItem('sessionId', fakeSession)
-        localStorage.setItem('userRole', 'employer')
-        
-        setUser(fakeUser)
-        setRole('employer')
-        setToken(fakeToken)
-        setSessionId(fakeSession)
+        setToken(response.access_token)
+        setSessionId(response.session_id || 'direct-session')
         setError(null)
+        return response
     }
 
     const logout = () => {

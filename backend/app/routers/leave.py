@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from app.database import get_session
 from app.models import User, Employee, LeaveRequest, LeaveRequestCreate, LeaveRequestStatusUpdate, Activity
-from app.routers.auth import get_current_user
+from app.routers.auth import get_current_user, require_employer
 
 router = APIRouter(prefix="/leave", tags=["leave"])
 
@@ -101,7 +101,7 @@ def get_my_leave_requests(
 def get_all_leave_requests(
     status_filter: Optional[str] = None,
     session: Session = Depends(get_session),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     """Fetch all leave requests for employer review."""
     query = select(LeaveRequest)
@@ -138,7 +138,7 @@ def update_leave_status(
     leave_id: int,
     payload: LeaveRequestStatusUpdate,
     session: Session = Depends(get_session),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     """Employer approves or rejects a leave request."""
     leave_req = session.get(LeaveRequest, leave_id)

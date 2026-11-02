@@ -4,11 +4,12 @@ from typing import List
 
 from ..database import get_session
 from ..models import Department, DepartmentCreate, DepartmentRead
-from .auth import get_current_user
+from .auth import get_current_user, require_employer
 
 router = APIRouter(
     prefix="/departments",
-    tags=["departments"]
+    tags=["departments"],
+    dependencies=[Depends(require_employer)]
 )
 
 @router.get("/", response_model=List[DepartmentRead])

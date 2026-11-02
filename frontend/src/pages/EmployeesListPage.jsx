@@ -281,15 +281,16 @@ export default function EmployeesListPage() {
 
         {/* TABLE AREA */}
         <div className={`${glassCardStyle} overflow-hidden`}>
-          <div className="overflow-x-auto min-w-[900px]">
+          <div className="overflow-x-auto">
+          <div className="min-w-[900px]">
             {/* TABLE HEADER */}
-            <div className="grid grid-cols-12 gap-4 px-6 py-3.5 border-b border-slate-200 bg-slate-50/80 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              <div className="col-span-4">Identity</div>
-              <div className="col-span-2">Department</div>
-              <div className="col-span-2">Role</div>
-              <div className="col-span-2">Location</div>
-              <div className="col-span-1">Status</div>
-              <div className="col-span-1 text-right">Actions</div>
+            <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)_minmax(0,2fr)_112px_112px] gap-4 px-6 py-3.5 border-b border-slate-200 bg-slate-50/80 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <div>Identity</div>
+              <div>Department</div>
+              <div>Role</div>
+              <div>Location</div>
+              <div>Status</div>
+              <div className="text-right">Actions</div>
             </div>
 
             {/* TABLE BODY */}
@@ -308,10 +309,10 @@ export default function EmployeesListPage() {
                 {employees.map((emp) => (
                   <div
                     key={emp.id}
-                    className="grid grid-cols-12 gap-4 items-center px-6 py-3.5 bg-white/60 hover:bg-white transition-colors group"
+                    className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)_minmax(0,2fr)_112px_112px] gap-4 items-center px-6 py-3.5 bg-white/60 hover:bg-white transition-colors group"
                   >
                     {/* IDENTITY */}
-                    <div className="col-span-4 flex items-center gap-3 cursor-pointer" onClick={() => setSelectedDetailEmployee(emp)}>
+                    <div className="flex items-center gap-3 cursor-pointer" onClick={() => setSelectedDetailEmployee(emp)}>
                       <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm shadow-sm group-hover:scale-105 transition-transform">
                         {emp.first_name[0]}{emp.last_name[0]}
                       </div>
@@ -322,25 +323,25 @@ export default function EmployeesListPage() {
                     </div>
 
                     {/* DEPARTMENT */}
-                    <div className="col-span-2 flex items-center gap-2 text-sm text-slate-600 font-medium">
+                    <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
                       <div className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-blue-400 transition-colors" />
                       {emp.department}
                     </div>
 
                     {/* ROLE */}
-                    <div className="col-span-2 flex items-center gap-2 text-sm text-slate-600 font-medium">
+                    <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
                       <Briefcase size={14} className="text-slate-400" />
                       {emp.role}
                     </div>
 
                     {/* LOCATION */}
-                    <div className="col-span-2 flex items-center gap-2 text-sm text-slate-500">
+                    <div className="flex items-center gap-2 text-sm text-slate-500">
                       <MapPin size={14} className="text-slate-400" />
                       {emp.location || 'Remote'}
                     </div>
 
                     {/* STATUS */}
-                    <div className="col-span-1">
+                    <div>
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
                         emp.status === 'active'
                           ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
@@ -352,11 +353,13 @@ export default function EmployeesListPage() {
                     </div>
 
                     {/* ACTIONS */}
-                    <div className="col-span-1 flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {/* Always visible (hover-only actions are unreachable on touch and keyboard) */}
+                    <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => setSelectedDetailEmployee(emp)}
                         className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-200 rounded-lg transition-colors"
                         title="View Record"
+                        aria-label={`View ${emp.first_name} ${emp.last_name}`}
                       >
                         <Eye size={16} />
                       </button>
@@ -364,6 +367,7 @@ export default function EmployeesListPage() {
                         onClick={() => handleEditEmployee(emp)}
                         className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         title="Edit Record"
+                        aria-label={`Edit ${emp.first_name} ${emp.last_name}`}
                       >
                         <Edit2 size={16} />
                       </button>
@@ -371,6 +375,7 @@ export default function EmployeesListPage() {
                         onClick={() => handleDeleteEmployee(emp.id)}
                         className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         title="Delete Record"
+                        aria-label={`Delete ${emp.first_name} ${emp.last_name}`}
                       >
                         <Trash2 size={16} />
                       </button>
@@ -379,6 +384,7 @@ export default function EmployeesListPage() {
                 ))}
               </div>
             )}
+          </div>
           </div>
         </div>
       </motion.div>

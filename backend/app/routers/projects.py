@@ -7,9 +7,9 @@ from app.models import (
     ProjectMember, ProjectMemberAdd, ProjectMemberRead,
     Employee, Activity
 )
-from app.routers.auth import get_current_user
+from app.routers.auth import get_current_user, require_employer
 
-router = APIRouter(prefix="/projects", tags=["projects"])
+router = APIRouter(prefix="/projects", tags=["projects"], dependencies=[Depends(require_employer)])
 
 def build_project_read(project: Project, session: Session) -> ProjectRead:
     members_raw = session.exec(

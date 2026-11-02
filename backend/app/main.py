@@ -9,6 +9,7 @@ from datetime import datetime
 from sqlmodel import Session, select
 from app.models import Employee, Activity, Project, ProjectMember, User
 from app.auth_utils import get_password_hash
+from app.config import settings as app_settings
 
 
 def _migrate_user_table():
@@ -128,15 +129,18 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=app_settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Only profile pictures are served publicly; CVs and vault documents go through
+# authenticated download endpoints.
 import os
-os.makedirs("uploads/profiles", exist_ok=True)
-app.mount("/api/v1/uploads", StaticFiles(directory="uploads"), name="uploads")
+PROFILE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads", "profiles")
+os.makedirs(PROFILE_DIR, exist_ok=True)
+app.mount("/api/v1/uploads/profiles", StaticFiles(directory=PROFILE_DIR), name="profiles")
 
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(dashboard.router, prefix="/api/v1")

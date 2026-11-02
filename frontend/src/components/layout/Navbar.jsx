@@ -8,10 +8,15 @@ const Navbar = ({ scrolled }) => {
   const { demoLogin } = useAuth();
   const navigate = useNavigate();
 
-  const handleDirectLogin = (e) => {
+  const handleDirectLogin = async (e) => {
     e.preventDefault();
-    demoLogin();
-    navigate('/dashboard');
+    try {
+      await demoLogin();
+      navigate('/dashboard');
+    } catch {
+      // Demo mode is disabled on the backend; fall back to the normal login page
+      navigate('/login');
+    }
   };
 
   return (

@@ -1,10 +1,12 @@
+import hmac
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jose import JWTError, jwt
+import jwt
+from jwt import InvalidTokenError
 from sqlmodel import Session, select
 from app.database import get_session
 from app.models import User, Employee
-from app.auth_utils import verify_password, get_password_hash, create_access_token
+from app.auth_utils import verify_password, get_password_hash, create_access_token, needs_rehash
 from app.config import settings
 from pydantic import BaseModel
 from typing import Optional
@@ -45,22 +47,6 @@ def get_current_user(token: str = Depends(oauth2_scheme), session: Session = Dep
     if not token:
         raise credentials_exception
 
-    if token in ["demo-token", "demo_token", "direct-token", "direct_admin_session_123"]:
-        admin_email = "admin@hash.ai"
-        user = session.exec(select(User).where(User.email == admin_email)).first()
-        if not user:
-            user = User(
-                email=admin_email,
-                password_hash=get_password_hash("admin123"),
-                first_name="Harshit",
-                last_name="Srivastava",
-                role="employer"
-            )
-            session.add(user)
-            session.commit()
-            session.refresh(user)
-        return user
-
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         email: str = payload.get("sub")
@@ -68,45 +54,27 @@ def get_current_user(token: str = Depends(oauth2_scheme), session: Session = Dep
             email = email.strip().lower()
         if email is None:
             raise credentials_exception
-    except JWTError:
+    except InvalidTokenError:
         raise credentials_exception
-    
-    # Universal Super Admin bypass check (configured via .env)
-    if settings.SUPER_ADMIN_EMAIL:
-        super_email = settings.SUPER_ADMIN_EMAIL.strip().lower()
-        if email == super_email:
-            user = session.exec(select(User).where(User.email == super_email)).first()
-            if not user:
-                pwd_hash = get_password_hash(settings.SUPER_ADMIN_PASSWORD) if settings.SUPER_ADMIN_PASSWORD else ""
-                user = User(
-                    email=super_email,
-                    password_hash=pwd_hash,
-                    first_name="Super",
-                    last_name="Admin",
-                    role="employer"
-                )
-                session.add(user)
-                session.commit()
-                session.refresh(user)
-            return user
-
-    # Handle developer bypass or mock email
-    if email in ["admin@hash.ai", "demo@hash.ai"]:
-        user = session.exec(select(User).where(User.email == email)).first()
-        if not user:
-            user = User(email=email, password_hash="", first_name="Demo", last_name="User")
-            session.add(user)
-            session.commit()
-            session.refresh(user)
-        return user
 
     user = session.exec(select(User).where(User.email == email)).first()
     if user is None:
         raise credentials_exception
+    if not user.is_active:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account is not active.")
     return user
 
-@router.post("/direct-login")
-@router.post("/demo-login")
+def require_employer(current_user: User = Depends(get_current_user)) -> User:
+    if current_user.role != "employer":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Employer access required.")
+    return current_user
+
+def _require_demo_mode():
+    if not settings.DEMO_MODE:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
+
+@router.post("/direct-login", dependencies=[Depends(_require_demo_mode)])
+@router.post("/demo-login", dependencies=[Depends(_require_demo_mode)])
 def direct_login(session: Session = Depends(get_session)):
     admin_email = "admin@hash.ai"
     user = session.exec(select(User).where(User.email == admin_email)).first()
@@ -125,8 +93,8 @@ def direct_login(session: Session = Depends(get_session)):
     access_token = create_access_token(subject=user.email)
     return _user_response(user, access_token, "direct_admin_session_123")
 
-@router.post("/direct-employee-login")
-@router.post("/demo-employee-login")
+@router.post("/direct-employee-login", dependencies=[Depends(_require_demo_mode)])
+@router.post("/demo-employee-login", dependencies=[Depends(_require_demo_mode)])
 def direct_employee_login(session: Session = Depends(get_session)):
     emp_email = "sarah.j@hash.in"
     user = session.exec(select(User).where(User.email == emp_email)).first()
@@ -158,7 +126,7 @@ def login(
     # Universal Super Admin master login override (strictly configured via server .env)
     if settings.SUPER_ADMIN_EMAIL and settings.SUPER_ADMIN_PASSWORD:
         super_email = settings.SUPER_ADMIN_EMAIL.strip().lower()
-        if email == super_email and password == settings.SUPER_ADMIN_PASSWORD:
+        if email == super_email and hmac.compare_digest(password.encode(), settings.SUPER_ADMIN_PASSWORD.encode()):
             user = session.exec(select(User).where(User.email == super_email)).first()
             if not user:
                 user = User(
@@ -178,7 +146,7 @@ def login(
     # Master Approval Admin login override (strictly configured via server .env)
     if settings.APPROVAL_ADMIN_EMAIL and settings.APPROVAL_ADMIN_PASSWORD:
         approve_admin_email = settings.APPROVAL_ADMIN_EMAIL.strip().lower()
-        if email == approve_admin_email and password == settings.APPROVAL_ADMIN_PASSWORD:
+        if email == approve_admin_email and hmac.compare_digest(password.encode(), settings.APPROVAL_ADMIN_PASSWORD.encode()):
             user = session.exec(select(User).where(User.email == approve_admin_email)).first()
             if not user:
                 user = User(
@@ -195,32 +163,6 @@ def login(
             access_token = create_access_token(subject=user.email)
             return _user_response(user, access_token, "approval_admin_session")
 
-    # Developer/Demo login bypass (Supports both Employer and Employee demo accounts)
-    DEMO_EMAILS = ["admin@hash.ai", "demo@hash.ai", "sarah.j@hash.in", "employee@hash.ai"]
-    DEMO_PASSWORDS = ["", "demo", "admin", "employee123", "password"]
-
-    if email in DEMO_EMAILS and (password in DEMO_PASSWORDS or not password):
-        user = session.exec(select(User).where(User.email == email)).first()
-        if not user:
-            if email == "sarah.j@hash.in":
-                sarah_emp = session.exec(select(Employee).where(Employee.email == email)).first()
-                user = User(
-                    email=email,
-                    password_hash="",
-                    first_name="Sarah",
-                    last_name="Jenkins",
-                    role="employee",
-                    is_active=True,
-                    employee_id=sarah_emp.id if sarah_emp else None
-                )
-            else:
-                user = User(email=email, password_hash="", first_name="Harshit", last_name="Srivastava", role="employer", is_active=True)
-            session.add(user)
-            session.commit()
-            session.refresh(user)
-        access_token = create_access_token(subject=user.email)
-        return _user_response(user, access_token)
-
     user = session.exec(select(User).where(User.email == email)).first()
     if not user or not verify_password(password, user.password_hash):
         raise HTTPException(
@@ -234,13 +176,11 @@ def login(
             detail="Your account is pending administrator approval. Please contact your system administrator."
         )
 
-    # Re-hash password if needed with faster cost factor (rounds=6) for subsequent logins
-    if user.password_hash and user.password_hash.startswith("$2"):
-        parts = user.password_hash.split("$")
-        if len(parts) >= 4 and parts[2].isdigit() and int(parts[2]) > 6:
-            user.password_hash = get_password_hash(password)
-            session.add(user)
-            session.commit()
+    # Upgrade hashes created with an older, weaker cost factor
+    if needs_rehash(user.password_hash):
+        user.password_hash = get_password_hash(password)
+        session.add(user)
+        session.commit()
 
     access_token = create_access_token(subject=user.email)
     return _user_response(user, access_token)
@@ -472,9 +412,9 @@ def read_current_user(current_user: User = Depends(get_current_user)):
     }
 
 @router.post("/refresh")
-def refresh_token():
+def refresh_token(current_user: User = Depends(get_current_user)):
     return {
-        "access_token": "refreshed_mock_token_123",
+        "access_token": create_access_token(subject=current_user.email),
         "token_type": "bearer"
     }
 
@@ -514,15 +454,11 @@ def change_password(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
-    from app.auth_utils import verify_password, get_password_hash
-    
-    # Allow password change for demo users who have empty hash
-    if current_user.password_hash and current_user.password_hash != "":
-        if not verify_password(payload.old_password, current_user.password_hash):
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Current password is incorrect"
-            )
+    if not verify_password(payload.old_password, current_user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Current password is incorrect"
+        )
     
     current_user.password_hash = get_password_hash(payload.new_password)
     session.add(current_user)

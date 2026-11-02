@@ -866,14 +866,14 @@ export default function SalaryPage() {
 
                                                 {/* Actions */}
                                                 <td className="px-6 py-4 text-right pr-6">
-                                                    <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <button onClick={() => downloadPayslip(record)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Download Payslip">
+                                                    <div className="flex items-center justify-end gap-1">
+                                                        <button onClick={() => downloadPayslip(record)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Download Payslip" aria-label="Download payslip">
                                                             <Download size={16} />
                                                         </button>
-                                                        <button onClick={() => setEditRecord(record)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                                                        <button onClick={() => setEditRecord(record)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit" aria-label="Edit salary record">
                                                             <Edit size={16} />
                                                         </button>
-                                                        <button onClick={() => handleDelete(record.id)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
+                                                        <button onClick={() => handleDelete(record.id)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete" aria-label="Delete salary record">
                                                             <Trash2 size={16} />
                                                         </button>
                                                     </div>

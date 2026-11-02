@@ -1,5 +1,4 @@
 import os
-import shutil
 import uuid
 from fastapi import APIRouter, Depends, HTTPException, File, UploadFile, Form
 from fastapi.responses import FileResponse
@@ -7,8 +6,9 @@ from sqlmodel import Session, select
 from typing import List
 
 from ..database import get_session
-from ..models import Document, DocumentRead, Employee
-from .auth import get_current_user
+from ..models import Document, DocumentRead, Employee, User
+from .auth import get_current_user, require_employer
+from ..file_utils import safe_filename, checked_extension, save_upload, DOCUMENT_EXTENSIONS
 
 router = APIRouter(
     prefix="/documents",
@@ -19,7 +19,7 @@ UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.get("/", response_model=List[DocumentRead])
-def get_all_documents(session: Session = Depends(get_session), current_user: str = Depends(get_current_user)):
+def get_all_documents(session: Session = Depends(get_session), current_user: User = Depends(require_employer)):
     documents = session.exec(select(Document)).all()
     # Populate employee_name for each document
     doc_reads = []
@@ -37,7 +37,7 @@ def get_all_documents(session: Session = Depends(get_session), current_user: str
 def get_employee_documents(
     employee_id: int,
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     documents = session.exec(select(Document).where(Document.employee_id == employee_id)).all()
     employee = session.get(Employee, employee_id)
@@ -56,22 +56,22 @@ def upload_document(
     document_type: str = Form("Other"),
     file: UploadFile = File(...),
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     employee = session.get(Employee, employee_id)
     if not employee:
         raise HTTPException(status_code=404, detail="Employee not found")
 
-    ext = os.path.splitext(file.filename)[1]
+    original_name = safe_filename(file.filename)
+    ext = checked_extension(original_name, DOCUMENT_EXTENSIONS)
     unique_filename = f"{uuid.uuid4()}{ext}"
     file_path = os.path.join(UPLOAD_DIR, unique_filename)
 
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    save_upload(file, file_path)
 
     new_doc = Document(
         filename=unique_filename,
-        original_name=file.filename,
+        original_name=original_name,
         document_type=document_type,
         employee_id=employee_id
     )
@@ -86,12 +86,12 @@ def upload_document(
 @router.get("/{document_id}/download")
 def download_document(
     document_id: int,
-    session: Session = Depends(get_session)
-    # Removing current_user dependency for simple download if accessed via <a> tag,
-    # or keep it if using an authenticated fetch (we'll keep it simple for now, but in production, we should authenticate)
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user)
 ):
     doc = session.get(Document, document_id)
-    if not doc:
+    # Employees may only download their own documents; 404 avoids revealing other IDs
+    if not doc or (current_user.role != "employer" and doc.employee_id != current_user.employee_id):
         raise HTTPException(status_code=404, detail="Document not found")
 
     file_path = os.path.join(UPLOAD_DIR, doc.filename)
@@ -104,7 +104,7 @@ def download_document(
 def delete_document(
     document_id: int,
     session: Session = Depends(get_session),
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(require_employer)
 ):
     doc = session.get(Document, document_id)
     if not doc:
