@@ -12,7 +12,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import MobileNavDrawer from './MobileNavDrawer'
-import AkiyamLogo from '../../assets/logo.png'
+import { useBranding } from '../../context/BrandingContext'
 
 const navLinkClass = (isActive) =>
   `flex items-center gap-2 px-3 py-2 rounded-xl font-semibold whitespace-nowrap transition-all group border
@@ -22,6 +22,7 @@ const navLinkClass = (isActive) =>
 
 export default function EmployeePortalSidebar() {
   const { logout, user } = useAuth()
+  const { logoUrl, companyName } = useBranding()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -50,8 +51,9 @@ export default function EmployeePortalSidebar() {
   }
 
   const brand = (
-    <span className="text-sm font-black tracking-tight text-slate-900">
-      Hash# <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600 font-bold">Portal</span>
+    <span className="text-sm font-black tracking-tight text-slate-900 flex items-center gap-1 min-w-0">
+      <span className="truncate max-w-[160px]" title={companyName}>{companyName === 'Cognitive EMS' ? 'Cognitive' : companyName}</span>
+      <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600 font-bold shrink-0">Portal</span>
     </span>
   )
 
@@ -68,7 +70,7 @@ export default function EmployeePortalSidebar() {
           <Menu size={16} />
         </button>
         <div className="flex items-center gap-3 shrink-0 cursor-pointer" onClick={() => navigate('/employee-portal')}>
-          <img src={AkiyamLogo} alt="Logo" className="w-8 h-8 object-contain shrink-0" />
+          <img src={logoUrl} alt={`${companyName} logo`} className="w-8 h-8 rounded-lg object-contain shrink-0" />
           <span className="hidden sm:inline-block">{brand}</span>
         </div>
       </div>

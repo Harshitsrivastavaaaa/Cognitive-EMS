@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import EmployeePortalSidebar from './EmployeePortalSidebar';
 import ToastContainer from '../common/ToastContainer';
-import AkiyamLogo from "../../assets/logo.png";
+import BrandLogo from "../../assets/logo.svg";
 
 export default function EmployeePortalLayout() {
     const { isAuthenticated, isEmployee, loading } = useAuth();
@@ -16,8 +16,8 @@ export default function EmployeePortalLayout() {
                 <div className="relative flex items-center justify-center w-20 h-20 mb-6">
                     <div className="absolute inset-0 rounded-full border-t-2 border-r-2 border-emerald-500 animate-spin"></div>
                     <motion.img
-                        src={AkiyamLogo}
-                        alt="Hash# Logo"
+                        src={BrandLogo}
+                        alt="Cognitive EMS logo"
                         animate={{ scale: [0.9, 1.05, 0.9], opacity: [0.5, 1, 0.5] }}
                         transition={{ duration: 2, repeat: Infinity }}
                         className="w-10 h-10 object-contain drop-shadow-md"

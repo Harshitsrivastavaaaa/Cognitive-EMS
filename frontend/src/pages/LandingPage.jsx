@@ -8,6 +8,7 @@ import {
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import harshitimg from '../assets/harshitimg.png';
+import BrandLogo from '../assets/logo.svg';
 
 const MOCK_ORG_NODES = [
   { 
@@ -22,7 +23,7 @@ const MOCK_ORG_NODES = [
     avatarBg: "from-blue-600 to-indigo-600", 
     tagColor: "bg-blue-50 text-blue-700 border-blue-200", 
     empId: "EMP-8042", 
-    email: "harshit.s@hash.ai", 
+    email: "harshit.s@cognitiveems.com", 
     uptime: "99.9%", 
     level: "L5 - Principal", 
     image: harshitimg // Passed as imported variable, not a string
@@ -39,7 +40,7 @@ const MOCK_ORG_NODES = [
     avatarBg: "from-pink-600 to-rose-600", 
     tagColor: "bg-pink-50 text-pink-700 border-blue-200", 
     empId: "EMP-8043", 
-    email: "prachi.k@hash.ai", 
+    email: "prachi.k@cognitiveems.com", 
     uptime: "99.4%", 
     level: "L4 - Senior",
     image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&auto=format&fit=crop&q=80"
@@ -56,7 +57,7 @@ const MOCK_ORG_NODES = [
     avatarBg: "from-purple-600 to-indigo-600", 
     tagColor: "bg-purple-50 text-purple-700 border-blue-200", 
     empId: "EMP-8044", 
-    email: "marcus.t@hash.ai", 
+    email: "marcus.t@cognitiveems.com", 
     uptime: "99.8%", 
     level: "L3 - Mid-Level",
     image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&auto=format&fit=crop&q=80"
@@ -73,7 +74,7 @@ const MOCK_ORG_NODES = [
     avatarBg: "from-emerald-600 to-teal-600", 
     tagColor: "bg-emerald-50 text-emerald-700 border-blue-200", 
     empId: "EMP-8045", 
-    email: "elena.r@hash.ai", 
+    email: "elena.r@cognitiveems.com", 
     uptime: "100%", 
     level: "L4 - Lead PM",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=80"
@@ -90,7 +91,7 @@ const MOCK_ORG_NODES = [
     avatarBg: "from-amber-600 to-orange-600", 
     tagColor: "bg-amber-50 text-amber-700 border-blue-200", 
     empId: "EMP-8046", 
-    email: "david.k@hash.ai", 
+    email: "david.k@cognitiveems.com", 
     uptime: "99.9%", 
     level: "L4 - Lead Ops",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80"
@@ -164,7 +165,7 @@ export default function LandingPage() {
         <div className="w-full px-6 lg:px-16 max-w-7xl mx-auto flex flex-col items-center text-center pt-6 pb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/90 shadow-2xs text-xs font-semibold text-slate-700 mb-8">
             <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
-            Hash#AI Automated EMS by Hash#AI 
+            Cognitive EMS · AI-powered employee management 
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-slate-900 mb-6">
@@ -211,7 +212,7 @@ export default function LandingPage() {
               </h2>
 
               <p className="text-slate-600 text-sm leading-relaxed">
-                Hash#AI EMS automatically compiles personnel data into professional, secure ID badges complete with unique verification serials, role credentials, and department tagging. Select a profile below to test live generation:
+                Cognitive EMS automatically compiles personnel data into professional, secure ID badges complete with unique verification serials, role credentials, and department tagging. Select a profile below to test live generation:
               </p>
 
               <div className="flex flex-wrap gap-2 pt-2">
@@ -243,10 +244,8 @@ export default function LandingPage() {
 
                 <div className="flex items-center justify-between pt-2 pb-4 border-b border-slate-100">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-slate-900 text-white font-black flex items-center justify-center text-xs">
-                      H#
-                    </div>
-                    <span className="font-extrabold text-sm tracking-tight">Hash<span className="text-pink-600">#</span>AI EMS</span>
+                    <img src={BrandLogo} alt="Cognitive EMS logo" className="w-7 h-7 rounded-lg" />
+                    <span className="font-extrabold text-sm tracking-tight">Cognitive <span className="text-blue-600">EMS</span></span>
                   </div>
                   <span className="text-[10px] font-mono font-bold bg-slate-100 border border-slate-200 px-2 py-0.5 rounded text-slate-600">
                     {activeUser.empId}
@@ -340,11 +339,9 @@ export default function LandingPage() {
               >
                 <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-purple-600 text-white font-bold flex items-center justify-center text-xs">
-                      H#
-                    </div>
+                    <img src={BrandLogo} alt="Cognitive EMS logo" className="w-8 h-8 rounded-xl" />
                     <div>
-                      <h4 className="font-extrabold text-sm tracking-tight text-slate-900">Hash#AI Technologies Inc.</h4>
+                      <h4 className="font-extrabold text-sm tracking-tight text-slate-900">Cognitive EMS</h4>
                       <p className="text-[10px] text-slate-400 uppercase tracking-widest">Global HR Operations Node</p>
                     </div>
                   </div>
@@ -357,7 +354,7 @@ export default function LandingPage() {
                   <div className="space-y-4 text-xs text-slate-700 leading-relaxed">
                     <p className="font-bold text-slate-900">Dear {activeUser.name},</p>
                     <p>
-                      We are thrilled to offer you the position of <strong className="text-slate-900">{activeUser.role}</strong> within our <span className="text-purple-600 font-semibold">{activeUser.dept}</span> division at Hash#AI. Your annual compensation package is structured at <strong className="text-emerald-600">{activeUser.salary}</strong>.
+                      We are thrilled to offer you the position of <strong className="text-slate-900">{activeUser.role}</strong> within our <span className="text-purple-600 font-semibold">{activeUser.dept}</span> division at Cognitive EMS. Your annual compensation package is structured at <strong className="text-emerald-600">{activeUser.salary}</strong>.
                     </p>
                     <p>
                       You will be assigned to the <strong className="text-slate-900">{activeUser.project}</strong> engineering initiative starting effective immediately.
@@ -399,7 +396,7 @@ export default function LandingPage() {
                 <div className="pt-6 border-t border-slate-100 flex items-center justify-between">
                   <div className="space-y-0.5">
                     <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Authorized Signatory</p>
-                    <p className="text-xs font-bold text-slate-900">Chief People Officer, Hash#AI</p>
+                    <p className="text-xs font-bold text-slate-900">Chief People Officer, Cognitive EMS</p>
                   </div>
                   <div className="px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 font-bold text-[10px] uppercase tracking-wider flex items-center gap-1">
                     <CheckCircle2 size={12} /> Digitally Verified

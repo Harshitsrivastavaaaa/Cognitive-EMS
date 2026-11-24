@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   User, Bell, Shield, Save, ArrowLeft, ShieldCheck, Activity,
   Cpu, Lock, Mail, Plus, Trash2, Smartphone, MessageSquare, Check, AlertTriangle,
-  Building2, Server, Sparkles, RefreshCw, Key, UserCheck, UserPlus, CheckCircle, XCircle
+  Building2, Server, Sparkles, RefreshCw, Key, UserCheck, UserPlus, CheckCircle, XCircle,
+  Building, ImagePlus, Globe, Phone, MapPin
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -11,6 +12,8 @@ import { useApp } from '../context/AppContext';
 import { settingsService } from '../services/employees';
 import { authService } from '../services/auth';
 import { departmentService } from '../services/departments';
+import { companyService } from '../services/company';
+import { useBranding } from '../context/BrandingContext';
 
 // Simplified Glass Theme
 const glassCardStyle = "bg-white/80 border border-slate-200 shadow-sm backdrop-blur-lg rounded-2xl";
@@ -56,6 +59,13 @@ export default function SettingsPage() {
   });
   const [provisioning, setProvisioning] = useState(false);
 
+  // --- COMPANY PROFILE STATE ---
+  const branding = useBranding();
+  const [companyForm, setCompanyForm] = useState({ company_name: '', tagline: '', address: '', email: '', phone: '', website: '' });
+  const [companyError, setCompanyError] = useState('');
+  const [savingCompany, setSavingCompany] = useState(false);
+  const [logoBusy, setLogoBusy] = useState(false);
+
   // --- PROFILE STATE ---
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -85,7 +95,7 @@ export default function SettingsPage() {
     if (user) {
       setFirstName(user.first_name || user.firstName || '');
       setLastName(user.last_name || user.lastName || '');
-      setEmails([user.email || 'admin@hash.ai']);
+      setEmails([user.email || 'admin@cognitiveems.com']);
     }
   }, [user]);
 
@@ -166,6 +176,7 @@ export default function SettingsPage() {
 
   const tabs = [
     { id: 'profile', label: 'General Identity', icon: User, desc: 'Personal details & aliases' },
+    ...(isEmployer ? [{ id: 'company', label: 'Company Profile', icon: Building, desc: 'Name, details & logo' }] : []),
     ...(isEmployer ? [{ id: 'accounts', label: 'Employee Provisioning', icon: Key, desc: 'Create & Activate Credentials' }] : []),
     { id: 'departments', label: 'Departments', icon: Building2, desc: 'Org structure & teams' },
     { id: 'security', label: 'Security & Auth', icon: Shield, desc: 'Password & MFA' },
@@ -250,6 +261,80 @@ export default function SettingsPage() {
       loadAccountsData();
     } catch (err) {
       addNotification({ type: 'error', message: 'Failed to reject user.' });
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'company') {
+      setCompanyForm({
+        company_name: branding.company_name || '',
+        tagline: branding.tagline || '',
+        address: branding.address || '',
+        email: branding.email || '',
+        phone: branding.phone || '',
+        website: branding.website || '',
+      });
+      setCompanyError('');
+    }
+    // Only reset the form when the tab opens, not on every branding refresh
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
+
+  const handleSaveCompany = async (e) => {
+    e.preventDefault();
+    if (!companyForm.company_name.trim()) {
+      setCompanyError('Company name is required.');
+      return;
+    }
+    if (companyForm.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(companyForm.email.trim())) {
+      setCompanyError('Enter a valid email address, or leave it blank.');
+      return;
+    }
+    setSavingCompany(true);
+    try {
+      await branding.applyProfile(await companyService.updateProfile(companyForm));
+      setCompanyError('');
+      addNotification({ type: 'success', message: 'Company profile updated.' });
+    } catch (err) {
+      const detail = err.response?.data?.detail;
+      setCompanyError(typeof detail === 'string' ? detail : 'Failed to save company profile.');
+    } finally {
+      setSavingCompany(false);
+    }
+  };
+
+  const handleLogoSelected = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
+      addNotification({ type: 'error', message: 'Logo must be a PNG, JPEG or WebP image.' });
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      addNotification({ type: 'error', message: 'Logo must be 2 MB or smaller.' });
+      return;
+    }
+    setLogoBusy(true);
+    try {
+      await branding.applyProfile(await companyService.uploadLogo(file));
+      addNotification({ type: 'success', message: 'Company logo updated.' });
+    } catch (err) {
+      addNotification({ type: 'error', message: err.response?.data?.detail || 'Failed to upload logo.' });
+    } finally {
+      setLogoBusy(false);
+    }
+  };
+
+  const handleRemoveLogo = async () => {
+    setLogoBusy(true);
+    try {
+      await branding.applyProfile(await companyService.removeLogo());
+      addNotification({ type: 'success', message: 'Logo reset to the default.' });
+    } catch (err) {
+      addNotification({ type: 'error', message: err.response?.data?.detail || 'Failed to remove logo.' });
+    } finally {
+      setLogoBusy(false);
     }
   };
 
@@ -397,7 +482,7 @@ export default function SettingsPage() {
                             <ShieldCheck size={12} /> Verified
                           </span>
                         </div>
-                        <p className="text-xs text-slate-500 truncate">{user?.email || 'admin@hash.ai'}</p>
+                        <p className="text-xs text-slate-500 truncate">{user?.email || 'admin@cognitiveems.com'}</p>
                       </div>
                     </div>
 
@@ -485,6 +570,116 @@ export default function SettingsPage() {
                 </motion.div>
               )}
 
+              {/* COMPANY PROFILE */}
+              {activeTab === 'company' && isEmployer && (
+                <motion.div key="company" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
+
+                  {/* Logo */}
+                  <div className={`${glassCardStyle} p-6 md:p-8 space-y-5 shadow-sm`}>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                      <ImagePlus size={16} className="text-blue-600" /> Company Logo
+                    </h4>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-5">
+                      <div className="w-24 h-24 rounded-2xl border border-slate-200 bg-slate-50 flex items-center justify-center p-2 shrink-0">
+                        <img src={branding.logoUrl} alt={`${branding.companyName} logo`} className="max-w-full max-h-full object-contain rounded-xl" />
+                      </div>
+                      <div className="space-y-3">
+                        <p className="text-xs text-slate-500 leading-relaxed">
+                          Shown in the app header, login page and on offer letters, certificates, payslips and ID badges.
+                          PNG, JPEG or WebP, up to 2 MB. A square image works best.
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <label className={`px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer focus-within:ring-2 focus-within:ring-blue-300 ${logoBusy ? 'opacity-50 pointer-events-none' : ''}`}>
+                            <ImagePlus size={14} /> {logoBusy ? 'Working...' : (branding.hasCustomLogo ? 'Replace Logo' : 'Upload Logo')}
+                            <input type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={handleLogoSelected} disabled={logoBusy} />
+                          </label>
+                          {branding.hasCustomLogo && (
+                            <button
+                              type="button"
+                              onClick={handleRemoveLogo}
+                              disabled={logoBusy}
+                              className="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:text-red-600 hover:border-red-200 text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 disabled:opacity-50"
+                            >
+                              <Trash2 size={14} /> Use Default Logo
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Details */}
+                  <form onSubmit={handleSaveCompany} noValidate className={`${glassCardStyle} p-6 md:p-8 space-y-5 shadow-sm`}>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                      <Building size={16} className="text-blue-600" /> Company Details
+                    </h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="sm:col-span-2 space-y-1.5">
+                        <label htmlFor="company_name" className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Company Name *</label>
+                        <input id="company_name" type="text" maxLength={120} value={companyForm.company_name}
+                          onChange={(e) => { setCompanyForm(f => ({ ...f, company_name: e.target.value })); setCompanyError(''); }}
+                          className={inputClass} placeholder="e.g. Acme Technologies Pvt. Ltd." />
+                      </div>
+                      <div className="sm:col-span-2 space-y-1.5">
+                        <label htmlFor="company_tagline" className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Tagline</label>
+                        <input id="company_tagline" type="text" maxLength={160} value={companyForm.tagline}
+                          onChange={(e) => setCompanyForm(f => ({ ...f, tagline: e.target.value }))}
+                          className={inputClass} placeholder="Optional short line under the name" />
+                      </div>
+                      <div className="sm:col-span-2 space-y-1.5">
+                        <label htmlFor="company_address" className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5"><MapPin size={12} /> Address</label>
+                        <textarea id="company_address" rows={2} maxLength={300} value={companyForm.address}
+                          onChange={(e) => setCompanyForm(f => ({ ...f, address: e.target.value }))}
+                          className={`${inputClass} resize-none`} placeholder="Street, city, state, postal code" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label htmlFor="company_email" className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5"><Mail size={12} /> Contact Email</label>
+                        <input id="company_email" type="email" maxLength={120} value={companyForm.email}
+                          onChange={(e) => { setCompanyForm(f => ({ ...f, email: e.target.value })); setCompanyError(''); }}
+                          className={inputClass} placeholder="hr@company.com" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label htmlFor="company_phone" className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5"><Phone size={12} /> Phone</label>
+                        <input id="company_phone" type="tel" maxLength={40} value={companyForm.phone}
+                          onChange={(e) => setCompanyForm(f => ({ ...f, phone: e.target.value }))}
+                          className={inputClass} placeholder="+91 80 1234 5678" />
+                      </div>
+                      <div className="sm:col-span-2 space-y-1.5">
+                        <label htmlFor="company_website" className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5"><Globe size={12} /> Website</label>
+                        <input id="company_website" type="text" maxLength={200} value={companyForm.website}
+                          onChange={(e) => setCompanyForm(f => ({ ...f, website: e.target.value }))}
+                          className={inputClass} placeholder="www.company.com" />
+                      </div>
+                    </div>
+
+                    {/* Live preview of the document header */}
+                    <div className="pt-4 border-t border-slate-100 space-y-2">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Document header preview</p>
+                      <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200 bg-white">
+                        <img src={branding.logoUrl} alt="" className="w-10 h-10 object-contain rounded-lg shrink-0" />
+                        <div className="min-w-0">
+                          <p className="text-base font-bold text-slate-900 truncate">{companyForm.company_name || 'Company Name'}</p>
+                          {companyForm.tagline && <p className="text-xs text-slate-500 truncate">{companyForm.tagline}</p>}
+                          <p className="text-[11px] text-slate-400 truncate">
+                            {[companyForm.address, companyForm.email, companyForm.phone, companyForm.website].filter(Boolean).join('  ·  ') || 'Address · email · phone · website'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {companyError && <p role="alert" className="text-xs font-semibold text-red-600">{companyError}</p>}
+
+                    <div className="flex justify-end">
+                      <button type="submit" disabled={savingCompany}
+                        className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors shadow-sm flex items-center gap-2 disabled:opacity-50">
+                        {savingCompany ? <Activity size={16} className="animate-spin" /> : <Save size={16} />}
+                        <span>{savingCompany ? 'Saving...' : 'Save Company Profile'}</span>
+                      </button>
+                    </div>
+                  </form>
+                </motion.div>
+              )}
+
               {/* EMPLOYEE ACCOUNTS PROVISIONING */}
               {activeTab === 'accounts' && (
                 <motion.div key="accounts" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
@@ -529,7 +724,7 @@ export default function SettingsPage() {
                           <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Work Email (Employee ID)</label>
                           <input
                             type="email"
-                            placeholder="john.doe@hash.in"
+                            placeholder="john.doe@cognitiveems.com"
                             value={provisionForm.email}
                             onChange={(e) => setProvisionForm({ ...provisionForm, email: e.target.value })}
                             className={inputClass}

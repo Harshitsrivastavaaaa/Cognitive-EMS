@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.database import create_db_and_tables, engine
 from app.routers import auth, employees, dashboard, attendance, settings, projects, leave, salary, departments, documents
-from app.routers import employee_portal
+from app.routers import employee_portal, company
 from contextlib import asynccontextmanager
 from datetime import datetime
 from sqlmodel import Session, select
@@ -50,7 +50,7 @@ def seed_database():
             emp_dict = {f"{e.first_name} {e.last_name}": e.id for e in emp_list}
 
             p1 = Project(
-                name="Hash# HRMS v2.0 Platform",
+                name="Cognitive EMS v2.0 Platform",
                 description="Next-gen AI powered employee management & intelligence suite with real-time telemetry.",
                 status="active",
                 client_name="Internal Innovation Lab",
@@ -98,13 +98,13 @@ def seed_database():
             
             session.commit()
 
-        # Seed demo employee user account (sarah.j@hash.in / employee123)
-        sarah_emp = session.exec(select(Employee).where(Employee.email == "sarah.j@hash.in")).first()
+        # Seed demo employee user account (sarah.j@cognitiveems.com / employee123)
+        sarah_emp = session.exec(select(Employee).where(Employee.email == "sarah.j@cognitiveems.com")).first()
         if sarah_emp:
-            existing_user = session.exec(select(User).where(User.email == "sarah.j@hash.in")).first()
+            existing_user = session.exec(select(User).where(User.email == "sarah.j@cognitiveems.com")).first()
             if not existing_user:
                 demo_employee_user = User(
-                    email="sarah.j@hash.in",
+                    email="sarah.j@cognitiveems.com",
                     password_hash=get_password_hash("employee123"),
                     first_name="Sarah",
                     last_name="Jenkins",
@@ -122,7 +122,7 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(
-    title="Hash# Employee Management API",
+    title="Cognitive EMS API",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -153,7 +153,8 @@ app.include_router(leave.router, prefix="/api/v1")
 app.include_router(salary.router, prefix="/api/v1")
 app.include_router(departments.router, prefix="/api/v1")
 app.include_router(documents.router, prefix="/api/v1")
+app.include_router(company.router, prefix="/api/v1")
 
 @app.get("/")
 def read_root():
-    return {"message": "Hash# Employee Management Service Node Online"}
+    return {"message": "Cognitive EMS API online"}

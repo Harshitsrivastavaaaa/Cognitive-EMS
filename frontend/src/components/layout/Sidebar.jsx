@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
-import HashAILogo from '../../assets/logo.png'
+import BrandLogo from '../../assets/logo.svg'
 
 export default function Sidebar() {
   const { sidebarCollapsed, toggleSidebar } = useApp()
@@ -52,7 +52,7 @@ export default function Sidebar() {
       {/* Brand Header */}
       <div className="h-16 flex items-center px-4 border-b border-slate-200/80 justify-between">
         <div className="flex items-center gap-3 overflow-hidden cursor-pointer" onClick={() => navigate('/dashboard')}>
-          <img src={HashAILogo} alt="Logo" className="w-8 h-8 object-contain shrink-0" />
+          <img src={BrandLogo} alt="Cognitive EMS logo" className="w-8 h-8 object-contain shrink-0" />
           {!sidebarCollapsed && (
             <motion.span
               initial={{ opacity: 0 }}
@@ -60,7 +60,7 @@ export default function Sidebar() {
               exit={{ opacity: 0 }}
               className="text-sm font-black tracking-tight text-slate-900 whitespace-nowrap"
             >
-              Hash#AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 font-bold">EMS</span>
+              Cognitive <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 font-bold">EMS</span>
             </motion.span>
           )}
         </div>

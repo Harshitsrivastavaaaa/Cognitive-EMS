@@ -7,9 +7,10 @@ import {
 import { jsPDF } from 'jspdf';
 import { employeePortalService } from '../../services/employeePortal';
 import api from '../../services/api';
-import logoSrc from '../../assets/logo.png';
+import { useBranding } from '../../context/BrandingContext';
 
 export default function EmployeeMyDocumentsPage() {
+  const { documentLogoUrl: logoSrc, companyName } = useBranding();
   const [profile, setProfile] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -199,7 +200,7 @@ export default function EmployeeMyDocumentsPage() {
       doc.setFont("helvetica", "bold");
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(5);
-      doc.text("HASH AI LLC", 27, 82, { align: 'center' });
+      doc.text(doc.splitTextToSize(companyName.toUpperCase(), 50)[0], 27, 82, { align: 'center' });
 
       doc.save(`Digital_ID_${profile.first_name}_${profile.last_name}.pdf`);
       setDownloading(false);
@@ -287,7 +288,7 @@ export default function EmployeeMyDocumentsPage() {
               {/* ID Badge Graphic */}
               <div className="w-[216px] h-[342px] shrink-0 bg-[#373e48] rounded-2xl shadow-2xl overflow-hidden relative border border-white/10 flex flex-col items-center">
                 <div className="w-full h-16 bg-emerald-500 flex items-center justify-center p-3">
-                  <img src={logoSrc} alt="Logo" className="max-h-8 object-contain rounded-md shadow-sm" />
+                  <img src={logoSrc} alt={`${companyName} logo`} className="max-h-8 object-contain rounded-md shadow-sm" />
                 </div>
                 <div className="absolute top-2 right-2 text-white/50 text-[8px] font-bold tracking-widest z-10">
                   ID
@@ -322,8 +323,8 @@ export default function EmployeeMyDocumentsPage() {
                 </div>
 
                 <div className="w-full h-10 bg-emerald-500 absolute bottom-0 flex items-center justify-center px-4">
-                  <span className="text-white text-[8px] font-bold tracking-widest uppercase text-center leading-tight">
-                    Hash AI LLC
+                  <span className="text-white text-[8px] font-bold tracking-widest uppercase text-center leading-tight truncate">
+                    {companyName}
                   </span>
                 </div>
               </div>

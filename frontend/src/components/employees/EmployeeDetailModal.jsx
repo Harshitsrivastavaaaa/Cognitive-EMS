@@ -3,12 +3,13 @@ import { X, Mail, Phone, MapPin, Calendar, Star, Award, FileText, Download, Chev
 import { jsPDF } from 'jspdf'
 import api from '../../services/api'
 import { attendanceService } from '../../services/employees'
-import logoSrc from '../../assets/logo.png'
+import { useBranding } from '../../context/BrandingContext'
 
 const labelStyle = "text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-0.5"
 const valueStyle = "text-sm text-slate-800 font-medium"
 
 export default function EmployeeDetailModal({ employee, onClose, showAttendanceOption = false, defaultTab = 'profile' }) {
+  const { documentLogoUrl: logoSrc, companyName } = useBranding()
   const [downloading, setDownloading] = useState(false)
   const [activeTab, setActiveTab] = useState(defaultTab)
   const [attendanceRecords, setAttendanceRecords] = useState([])
@@ -223,7 +224,7 @@ export default function EmployeeDetailModal({ employee, onClose, showAttendanceO
       doc.setFont("helvetica", "bold");
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(5);
-      doc.text("HASH# SOLUTIONS", 27, 82, { align: 'center' });
+      doc.text(doc.splitTextToSize(companyName.toUpperCase(), 50)[0], 27, 82, { align: 'center' });
 
       doc.save(`ID_Card_${employee.first_name}_${employee.last_name}.pdf`);
       setDownloading(false);
@@ -615,7 +616,7 @@ export default function EmployeeDetailModal({ employee, onClose, showAttendanceO
                   {/* Compact ID Graphic */}
                   <div className="w-[150px] h-[238px] bg-slate-900 rounded-xl shadow-md overflow-hidden relative border border-slate-200 flex flex-col items-center mb-4">
                     <div className="w-full h-12 bg-blue-600 flex items-center justify-center p-2">
-                      <img src={logoSrc} alt="Logo" className="max-h-6 object-contain rounded-sm" />
+                      <img src={logoSrc} alt={`${companyName} logo`} className="max-h-6 object-contain rounded-sm" />
                     </div>
                     
                     <div className="w-16 h-16 mt-3 bg-white rounded-xl shadow border-2 border-slate-900 relative flex flex-col items-center justify-center overflow-hidden z-10 shrink-0">
@@ -642,8 +643,8 @@ export default function EmployeeDetailModal({ employee, onClose, showAttendanceO
                     </div>
 
                     <div className="w-full h-7 bg-blue-600 absolute bottom-0 flex items-center justify-center">
-                      <span className="text-white text-[7px] font-bold tracking-widest uppercase">
-                        HASH# SOLUTIONS
+                      <span className="text-white text-[7px] font-bold tracking-widest uppercase truncate px-2">
+                        {companyName}
                       </span>
                     </div>
                   </div>

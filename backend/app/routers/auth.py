@@ -76,7 +76,7 @@ def _require_demo_mode():
 @router.post("/direct-login", dependencies=[Depends(_require_demo_mode)])
 @router.post("/demo-login", dependencies=[Depends(_require_demo_mode)])
 def direct_login(session: Session = Depends(get_session)):
-    admin_email = "admin@hash.ai"
+    admin_email = "admin@cognitiveems.com"
     user = session.exec(select(User).where(User.email == admin_email)).first()
     if not user:
         user = User(
@@ -96,7 +96,7 @@ def direct_login(session: Session = Depends(get_session)):
 @router.post("/direct-employee-login", dependencies=[Depends(_require_demo_mode)])
 @router.post("/demo-employee-login", dependencies=[Depends(_require_demo_mode)])
 def direct_employee_login(session: Session = Depends(get_session)):
-    emp_email = "sarah.j@hash.in"
+    emp_email = "sarah.j@cognitiveems.com"
     user = session.exec(select(User).where(User.email == emp_email)).first()
     if not user:
         sarah_emp = session.exec(select(Employee).where(Employee.email == emp_email)).first()

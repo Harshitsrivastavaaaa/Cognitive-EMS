@@ -193,7 +193,7 @@ export default function EmployeesListPage() {
             Employee <span className="text-blue-600">Directory</span>
           </h1>
           <p className="mt-1 text-sm text-slate-600">
-            Manage active nodes and personnel data at Hash# Solutions.
+            Manage active nodes and personnel data at Cognitive EMS.
           </p>
         </div>
 

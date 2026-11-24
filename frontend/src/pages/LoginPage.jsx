@@ -4,11 +4,12 @@ import { useAuth } from '../context/AuthContext'
 import { Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle, Building2, UserCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import '@/index.css'
-import Hashailogo from "../assets/logo.png";
+import { useBranding } from "../context/BrandingContext";
 import Navbar from "../components/layout/Navbar"
 
 export default function LoginPage() {
     const { login, isAuthenticated, role } = useAuth()
+    const { logoUrl, companyName } = useBranding()
     const navigate = useNavigate()
     const [loginRole, setLoginRole] = useState('employer') // 'employer' or 'employee'
     const [showPassword, setShowPassword] = useState(false)
@@ -57,16 +58,10 @@ export default function LoginPage() {
                 <div className="hidden lg:flex flex-col justify-between w-[45%] py-10 px-8 bg-slate-50/50 border-r border-slate-200 relative overflow-hidden">
                     <div className="relative z-10 space-y-6">
                         {/* Logo Box with Curved Edges */}
-                        <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200/80 p-2 flex items-center justify-center shadow-sm">
-                            <img 
-                                src={Hashailogo} 
-                                alt="Hash#AI Logo" 
-                                className="w-full h-full object-contain" 
-                            />
-                        </div>
+                        <img src={logoUrl} alt={`${companyName} logo`} className="w-14 h-14 rounded-2xl object-contain shadow-sm" />
                         <div>
                           <h1 className="text-3xl font-bold tracking-tight text-slate-900 leading-tight">
-                              Hash#AI <br/>
+                              {companyName} <br/>
                               <span className="text-blue-600 font-bold">
                                   Automated Employee Management System
                               </span>
@@ -92,7 +87,7 @@ export default function LoginPage() {
                     </div>
 
                     <div className="relative z-10 text-[10px] font-bold text-slate-400 tracking-wider uppercase mt-12">
-                        <span>Hash#AI © 2026</span>
+                        <span>{companyName} © {new Date().getFullYear()}</span>
                     </div>
                 </div>
 

@@ -1,9 +1,9 @@
 {
-    "name": "hrms-ai-desktop",
+    "name": "cognitive-ems-frontend",
     "type": "module",
     "private": true,
     "version": "1.0.0",
-    "description": "AI-Powered HR Management System - Desktop Application",
+    "description": "Cognitive EMS — Employee Management System frontend",
     "main": "electron/main.js",
     "scripts": {
         "dev": "vite",
@@ -52,8 +52,8 @@
         "wait-on": "^7.2.0"
     },
     "build": {
-        "appId": "com.hash.hrms",
-        "productName": "HRMS AI",
+        "appId": "com.cognitiveems.app",
+        "productName": "Cognitive EMS",
         "directories": {
             "output": "dist-electron"
         },

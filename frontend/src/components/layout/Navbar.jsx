@@ -2,7 +2,7 @@ import React from 'react';
 import { LogIn } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import logo from '../../assets/logo.png';
+import BrandLogo from '../../assets/logo.svg';
 
 const Navbar = ({ scrolled }) => {
   const { demoLogin } = useAuth();
@@ -35,16 +35,10 @@ const Navbar = ({ scrolled }) => {
           className="flex items-center gap-3 cursor-pointer group"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
-          <div className="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200/80 p-1.5 group-hover:scale-105 transition-transform shadow-xs">
-             <img 
-               src={logo} 
-               alt="Hash# Logo" 
-               className="w-full h-full object-contain" 
-             />
-          </div>
+          <img src={BrandLogo} alt="Cognitive EMS logo" className="w-9 h-9 rounded-xl shadow-xs group-hover:scale-105 transition-transform" />
           <div className="flex flex-col">
             <span className="font-black text-base tracking-tighter text-slate-900 leading-tight">
-              HASH<span className="text-blue-600">#</span>AI
+              COGNITIVE
             </span>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mt-0.5">E M S</span>
           </div>

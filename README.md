@@ -1,5 +1,5 @@
 🚀 Overview
-Hash#AI EMS is a comprehensive solution for streamlining internal operations, personnel directory management, tracking project allocations, processing complex payroll structures, and handling end-to-end employee lifecycles (joining to offboarding).
+Cognitive EMS is a comprehensive solution for streamlining internal operations, personnel directory management, tracking project allocations, processing complex payroll structures, and handling end-to-end employee lifecycles (joining to offboarding).
 
 Featuring a polished light glassmorphic interface and robust backend integration, it bridges the gap between administrative oversight and employee self-service capabilities.
 
@@ -93,12 +93,14 @@ npm run dev
 
 ## 🔑 Default Login Credentials
 
-The system automatically initializes tables and admin credentials on first startup:
+There are no built-in passwords. Admin accounts are created on first login from the values you set in `backend/.env`:
 
-| Role | Email | Password | Access Level |
-| :--- | :--- | :--- | :--- |
-| **Super Admin** | `superadmin@hash.ai` | `superadmin123` | Full administrative control & analytics |
-| **Approval Admin** | `admin.approve@hash.ai` | `Hash#Admin2026!SecureKey` | Approvals, leaves, & department oversight |
+| Role | `.env` settings | Access Level |
+| :--- | :--- | :--- |
+| **Super Admin** | `SUPER_ADMIN_EMAIL`, `SUPER_ADMIN_PASSWORD` | Full administrative control & analytics |
+| **Approval Admin** | `APPROVAL_ADMIN_EMAIL`, `APPROVAL_ADMIN_PASSWORD` | Approvals, leaves, & department oversight |
+
+For a quick look without accounts, set `DEMO_MODE=true` and use the **Live Demo** button on the landing page (demo admin: `admin@cognitiveems.com`). Never enable demo mode on a public server.
 
 ---
 
@@ -131,10 +133,17 @@ cd "Hash Employee Management"
 The backend automatically loads settings from `backend/.env`. A ready-to-use template `backend/.env.example` is provided:
 
 ```env
-# Security Settings
-SECRET_KEY=9f0b5402324707bb37517c5b6bb17f8a7095b5e7d5cf2a2559595861ab3decd2
+# Security Settings — REQUIRED: generate your own key
+#   python -c "import secrets; print(secrets.token_hex(32))"
+SECRET_KEY=
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+# Frontend origins allowed to call the API (comma-separated)
+CORS_ORIGINS=http://localhost:5173
+
+# Passwordless "Live Demo" login. Keep false in production.
+DEMO_MODE=false
 
 # Database Configuration (Choose one):
 # Option A (Recommended for quick start / local dev): SQLite
@@ -143,11 +152,11 @@ DATABASE_URL=sqlite:///./employees.db
 # Option B (Production / PostgreSQL):
 # DATABASE_URL=postgresql://postgres:postgres@localhost:5432/hash_hrms
 
-# Admin Accounts
-SUPER_ADMIN_EMAIL=superadmin@hash.ai
-SUPER_ADMIN_PASSWORD=superadmin123
-APPROVAL_ADMIN_EMAIL=admin.approve@hash.ai
-APPROVAL_ADMIN_PASSWORD=Hash#Admin2026!SecureKey
+# Admin Accounts (leave blank to disable; use strong, unique passwords)
+SUPER_ADMIN_EMAIL=
+SUPER_ADMIN_PASSWORD=
+APPROVAL_ADMIN_EMAIL=
+APPROVAL_ADMIN_PASSWORD=
 ```
 
 #### Database Modes:
@@ -272,4 +281,4 @@ All API endpoints are prefixed with `/api/v1`:
 
 ## 📄 License
 
-Hash#AI Employee Management System. @2026 All rights reserved.
+Cognitive EMS — Employee Management System. @2026 All rights reserved.

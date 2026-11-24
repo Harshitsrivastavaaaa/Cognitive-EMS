@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, HashRouter } from 'react-router-dom'
 import PageLoader from './components/common/PageLoader'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { AppProvider } from './context/AppContext'
+import { BrandingProvider } from './context/BrandingContext'
 import MainLayout from './components/layout/MainLayout'
 import EmployeePortalLayout from './components/layout/EmployeePortalLayout'
 import ScrollToTop from './components/layout/ScrollToTop'
@@ -103,11 +104,13 @@ function AppRoutes() {
 function App() {
     return (
         <HashRouter>
-            <AuthProvider>
-                <AppProvider>
-                    <AppRoutes />
-                </AppProvider>
-            </AuthProvider>
+            <BrandingProvider>
+                <AuthProvider>
+                    <AppProvider>
+                        <AppRoutes />
+                    </AppProvider>
+                </AuthProvider>
+            </BrandingProvider>
         </HashRouter>
     )
 }

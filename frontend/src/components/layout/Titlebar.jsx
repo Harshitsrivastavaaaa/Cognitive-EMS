@@ -19,7 +19,7 @@ export default function Titlebar() {
     return (
         <div className="titlebar">
             <div className="titlebar-drag-area">
-                <span className="titlebar-title">Hash#AI EMS</span>
+                <span className="titlebar-title">Cognitive EMS</span>
             </div>
             <div className="titlebar-controls">
                 <button className="titlebar-button" onClick={handleMinimize}>

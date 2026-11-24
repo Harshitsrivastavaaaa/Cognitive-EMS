@@ -1,4 +1,4 @@
-# 🚀 Hash# HRMS - FastAPI + Uvicorn Deployment Guide
+# 🚀 Cognitive EMS - FastAPI + Uvicorn Deployment Guide
 
 This guide details how to deploy the **Python FastAPI + Uvicorn** backend on **Hostinger VPS** (or any Ubuntu/Debian Linux VPS server).
 

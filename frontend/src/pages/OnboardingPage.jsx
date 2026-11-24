@@ -6,9 +6,9 @@ import { format } from 'date-fns';
 import { useAuth } from '../context/AuthContext';
 import { employeesService } from '../services/employees';
 import api from '../services/api';
-import logoSrc from '../assets/logo.png';
+import { useBranding } from '../context/BrandingContext';
 
-// Simplified Glass Theme Glassmorphisom we call it .HashAi
+// Simplified Glass Theme Glassmorphisom we call it .CognitiveEMS
 const glassCardStyle = "bg-white/80 border border-slate-200 shadow-sm backdrop-blur-lg rounded-2xl";
 const containerVariants = {
   hidden: { opacity: 0, y: 15 },
@@ -16,6 +16,7 @@ const containerVariants = {
 };
 
 export default function OnboardingPage() {
+  const { documentLogoUrl: logoSrc, companyName, contactLine } = useBranding();
   const { user } = useAuth();
   const [employeesList, setEmployeesList] = useState([]);
   const [loadingEmployees, setLoadingEmployees] = useState(false);
@@ -130,7 +131,7 @@ export default function OnboardingPage() {
 
     doc.setFontSize(20);
     doc.setTextColor(40, 40, 40);
-    doc.text("Hash AI LLC", textStartX, 22);
+    doc.text(companyName, textStartX, 22);
 
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
@@ -153,7 +154,7 @@ export default function OnboardingPage() {
     // Body
     doc.setFont("helvetica", "normal");
     doc.setTextColor(60, 60, 60);
-    const bodyText = `We are thrilled to offer you the position of ${formData.jobTitle || '[Job Title]'} in the ${formData.department || '[Department]'} department at Hash AI LLC. We were extremely impressed with your skills and experience, and we believe you will be a valuable addition to our team.`;
+    const bodyText = `We are thrilled to offer you the position of ${formData.jobTitle || '[Job Title]'} in the ${formData.department || '[Department]'} department at ${companyName}. We were extremely impressed with your skills and experience, and we believe you will be a valuable addition to our team.`;
     
     const splitBody = doc.splitTextToSize(bodyText, 175);
     doc.text(splitBody, 14, 80);
@@ -194,7 +195,7 @@ export default function OnboardingPage() {
     doc.setFont("helvetica", "normal");
     doc.setTextColor(60, 60, 60);
     doc.text("Director / HR Head", 14, 215);
-    doc.text("Hash AI LLC", 14, 220);
+    doc.text(companyName, 14, 220);
 
     doc.setTextColor(20, 20, 20);
     doc.text("Accepted By:", 120, 185);
@@ -207,7 +208,8 @@ export default function OnboardingPage() {
     // Footer
     doc.setFontSize(9);
     doc.setTextColor(150, 150, 150);
-    doc.text("This is an official document of Hash AI LLC.", 14, 280);
+    doc.text(`This is an official document of ${companyName}.`, 14, 280);
+    if (contactLine) doc.text(doc.splitTextToSize(contactLine, 182), 14, 285);
 
     const pdfFilename = `Offer_Letter_${formData.candidateName?.replace(/\s+/g, '_') || 'Draft'}.pdf`;
     const generatedBlob = doc.output('blob');
@@ -224,7 +226,7 @@ export default function OnboardingPage() {
         const createdEmp = await employeesService.create({
           first_name: firstName,
           last_name: lastName,
-          email: formData.email || `${firstName.toLowerCase()}.${lastName.toLowerCase()}@hash.in`,
+          email: formData.email || `${firstName.toLowerCase()}.${lastName.toLowerCase()}@cognitiveems.com`,
           role: formData.jobTitle || 'New Hire',
           department: formData.department || 'General',
           salary: formData.compensation || 0,
@@ -363,9 +365,9 @@ export default function OnboardingPage() {
         <motion.div variants={containerVariants} className={`lg:col-span-7 ${glassCardStyle} p-8 md:p-10 text-slate-800 h-fit min-h-[600px] shadow-sm`}>
           <div className="flex items-center justify-between border-b border-slate-200 pb-6 mb-6">
             <div className="flex items-center gap-3">
-              <img src={logoSrc} alt="Hash# Logo" className="h-8 object-contain" />
+              <img src={logoSrc} alt={`${companyName} logo`} className="h-8 object-contain" />
               <div>
-                <h1 className="text-xl font-bold text-slate-900">Hash AI LLC</h1>
+                <h1 className="text-xl font-bold text-slate-900">{companyName}</h1>
                 <p className="text-xs text-slate-500">Offer of Employment</p>
               </div>
             </div>
@@ -382,7 +384,7 @@ export default function OnboardingPage() {
             </div>
 
             <p className="leading-relaxed text-slate-600 text-justify">
-              We are thrilled to offer you the position of <span className="font-semibold text-blue-700 bg-blue-50 px-1 py-0.5 rounded">{formData.jobTitle || '[Job Title]'}</span> in the <span className="font-semibold text-blue-700 bg-blue-50 px-1 py-0.5 rounded">{formData.department || '[Department]'}</span> department at Hash AI LLC. We were extremely impressed with your skills and experience, and we believe you will be a valuable addition to our team.
+              We are thrilled to offer you the position of <span className="font-semibold text-blue-700 bg-blue-50 px-1 py-0.5 rounded">{formData.jobTitle || '[Job Title]'}</span> in the <span className="font-semibold text-blue-700 bg-blue-50 px-1 py-0.5 rounded">{formData.department || '[Department]'}</span> department at {companyName}. We were extremely impressed with your skills and experience, and we believe you will be a valuable addition to our team.
             </p>
 
             <div className="space-y-2 bg-slate-50 border border-slate-200/60 p-4 rounded-xl">
@@ -408,7 +410,8 @@ export default function OnboardingPage() {
             </div>
 
             <div className="pt-6 text-xs text-slate-400 border-t border-slate-100">
-              This is an official document of Hash AI LLC.
+              This is an official document of {companyName}.
+              {contactLine && <p className="mt-1">{contactLine}</p>}
             </div>
           </div>
         </motion.div>

@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { useAuth } from '../context/AuthContext';
 import { employeesService } from '../services/employees';
 import api from '../services/api';
-import logoSrc from '../assets/logo.png';
+import { useBranding } from '../context/BrandingContext';
 
 // Simplified Glass Theme
 const glassCardStyle = "bg-white/80 border border-slate-200 shadow-sm backdrop-blur-lg rounded-2xl";
@@ -17,6 +17,7 @@ const containerVariants = {
 };
 
 export default function OffboardingPage() {
+  const { documentLogoUrl: logoSrc, companyName, contactLine } = useBranding();
   const { user } = useAuth();
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -94,7 +95,7 @@ export default function OffboardingPage() {
 
     doc.setFontSize(20);
     doc.setTextColor(40, 40, 40);
-    doc.text("Hash AI LLC", textStartX, 22);
+    doc.text(companyName, textStartX, 22);
 
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
@@ -118,7 +119,7 @@ export default function OffboardingPage() {
     const joinDate = selectedEmployee.hire_date ? format(new Date(selectedEmployee.hire_date), 'MMMM dd, yyyy') : '[Join Date]';
     const lastDay = formData.lastWorkingDay ? format(new Date(formData.lastWorkingDay), 'MMMM dd, yyyy') : '[Last Working Day]';
 
-    let bodyText = `This is to certify that ${selectedEmployee.first_name} ${selectedEmployee.last_name} was employed with Hash AI LLC from ${joinDate} to ${lastDay}. During this tenure, they held the position of ${selectedEmployee.role || selectedEmployee.position || '[Role]'}.`;
+    let bodyText = `This is to certify that ${selectedEmployee.first_name} ${selectedEmployee.last_name} was employed with ${companyName} from ${joinDate} to ${lastDay}. During this tenure, they held the position of ${selectedEmployee.role || selectedEmployee.position || '[Role]'}.`;
 
     if (formData.conduct === 'excellent') {
       bodyText += `\n\nDuring their employment, we found them to be a dedicated, hardworking, and highly motivated professional. They consistently delivered excellent results and were a valuable member of our team.`;
@@ -139,7 +140,7 @@ export default function OffboardingPage() {
 
     // Signatures
     doc.setTextColor(20, 20, 20);
-    doc.text("For Hash AI LLC,", 14, 150);
+    doc.text(`For ${companyName},`, 14, 150);
 
     const canvas = document.createElement('canvas');
     canvas.width = 300;
@@ -161,7 +162,8 @@ export default function OffboardingPage() {
     // Footer
     doc.setFontSize(9);
     doc.setTextColor(150, 150, 150);
-    doc.text("This is an official document of Hash AI LLC.", 14, 280);
+    doc.text(`This is an official document of ${companyName}.`, 14, 280);
+    if (contactLine) doc.text(doc.splitTextToSize(contactLine, 182), 14, 285);
 
     const pdfFilename = `Experience_Certificate_${selectedEmployee.first_name}_${selectedEmployee.last_name}.pdf`;
     const pdfBlob = doc.output('blob');
@@ -287,9 +289,9 @@ export default function OffboardingPage() {
         <motion.div variants={containerVariants} className={`lg:col-span-7 ${glassCardStyle} p-8 md:p-10 text-slate-800 h-fit min-h-[600px] shadow-sm`}>
           <div className="flex items-center justify-between border-b border-slate-200 pb-6 mb-6">
             <div className="flex items-center gap-3">
-              <img src={logoSrc} alt="Hash# Logo" className="h-8 object-contain" />
+              <img src={logoSrc} alt={`${companyName} logo`} className="h-8 object-contain" />
               <div>
-                <h1 className="text-xl font-bold text-slate-900">Hash AI LLC</h1>
+                <h1 className="text-xl font-bold text-slate-900">{companyName}</h1>
                 <p className="text-xs text-slate-500">Experience Certificate</p>
               </div>
             </div>
@@ -308,7 +310,7 @@ export default function OffboardingPage() {
             {selectedEmployee ? (
               <div className="space-y-4">
                 <p className="leading-relaxed text-slate-600 text-justify">
-                  This is to certify that <span className="font-semibold text-blue-700 bg-blue-50 px-1 py-0.5 rounded">{selectedEmployee.first_name} {selectedEmployee.last_name}</span> was employed with Hash AI LLC from <span className="font-semibold text-slate-800">{selectedEmployee.date_of_joining ? format(new Date(selectedEmployee.date_of_joining), 'MMMM dd, yyyy') : '[Join Date]'}</span> to <span className="font-semibold text-slate-800">{formData.lastWorkingDay ? format(new Date(formData.lastWorkingDay), 'MMMM dd, yyyy') : '[Last Working Day]'}</span>. During this tenure, they held the position of <span className="font-semibold text-blue-700 bg-blue-50 px-1 py-0.5 rounded">{selectedEmployee.role || selectedEmployee.position || '[Role]'}</span>.
+                  This is to certify that <span className="font-semibold text-blue-700 bg-blue-50 px-1 py-0.5 rounded">{selectedEmployee.first_name} {selectedEmployee.last_name}</span> was employed with {companyName} from <span className="font-semibold text-slate-800">{selectedEmployee.date_of_joining ? format(new Date(selectedEmployee.date_of_joining), 'MMMM dd, yyyy') : '[Join Date]'}</span> to <span className="font-semibold text-slate-800">{formData.lastWorkingDay ? format(new Date(formData.lastWorkingDay), 'MMMM dd, yyyy') : '[Last Working Day]'}</span>. During this tenure, they held the position of <span className="font-semibold text-blue-700 bg-blue-50 px-1 py-0.5 rounded">{selectedEmployee.role || selectedEmployee.position || '[Role]'}</span>.
                 </p>
 
                 {formData.conduct === 'excellent' && (
@@ -335,7 +337,7 @@ export default function OffboardingPage() {
             )}
 
             <div className="pt-8 border-t border-slate-100">
-              <p className="text-slate-900">For Hash AI LLC,</p>
+              <p className="text-slate-900">For {companyName},</p>
               <div className="h-14 flex items-end">
                 <p className="font-signature text-3xl text-slate-900 -rotate-3 -ml-1">{adminName}</p>
               </div>
@@ -344,7 +346,8 @@ export default function OffboardingPage() {
             </div>
 
             <div className="pt-6 text-xs text-slate-400 border-t border-slate-100">
-              This is an official document of Hash AI LLC.
+              This is an official document of {companyName}.
+              {contactLine && <p className="mt-1">{contactLine}</p>}
             </div>
           </div>
         </motion.div>

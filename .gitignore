@@ -16,6 +16,7 @@ env/
 # OS Files
 .DS_Store
 Thumbs.db
+.claude
 
 # Databases & Uploads
 *.db

@@ -1,5 +1,5 @@
 [Unit]
-Description=Hash# HRMS FastAPI Uvicorn Backend Service
+Description=Cognitive EMS FastAPI Uvicorn Backend Service
 After=network.target
 
 [Service]

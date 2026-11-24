@@ -322,3 +322,34 @@ class SalaryRecordUpdate(SQLModel):
 class BulkPayrollProcessCreate(SQLModel):
     month: str
     year: int
+
+
+# --- COMPANY PROFILE (single row, id=1) ---
+class CompanyProfileBase(SQLModel):
+    company_name: str = Field(default="Cognitive EMS", max_length=120)
+    tagline: Optional[str] = Field(default=None, max_length=160)
+    address: Optional[str] = Field(default=None, max_length=300)
+    email: Optional[str] = Field(default=None, max_length=120)
+    phone: Optional[str] = Field(default=None, max_length=40)
+    website: Optional[str] = Field(default=None, max_length=200)
+
+class CompanyProfile(CompanyProfileBase, table=True):
+    id: Optional[int] = Field(default=1, primary_key=True)
+    logo_filename: Optional[str] = None
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class CompanyProfileUpdate(SQLModel):
+    company_name: str = Field(min_length=1, max_length=120)
+    tagline: Optional[str] = Field(default=None, max_length=160)
+    address: Optional[str] = Field(default=None, max_length=300)
+    email: Optional[str] = Field(default=None, max_length=120)
+    phone: Optional[str] = Field(default=None, max_length=40)
+    website: Optional[str] = Field(default=None, max_length=200)
+
+    @field_validator("company_name", "tagline", "address", "email", "phone", "website", mode="before")
+    @classmethod
+    def strip_blank(cls, v):
+        if isinstance(v, str):
+            v = v.strip()
+            return v or None
+        return v

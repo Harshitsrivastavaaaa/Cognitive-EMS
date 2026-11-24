@@ -8,7 +8,7 @@ export function AppProvider({ children }) {
     const [notifications, setNotifications] = useState([
         {
             id: 1,
-            title: 'Welcome to Hash# EMS',
+            title: 'Welcome to Cognitive EMS',
             message: 'Your workspace is ready. You can browse the employee directory or view analytics.',
             read: false,
             timestamp: new Date()

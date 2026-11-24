@@ -30,7 +30,7 @@ def save_upload(file: UploadFile, path: str, max_bytes: int = MAX_UPLOAD_BYTES) 
             while chunk := file.file.read(1024 * 1024):
                 written += len(chunk)
                 if written > max_bytes:
-                    raise HTTPException(status_code=413, detail="File is too large (max 10 MB).")
+                    raise HTTPException(status_code=413, detail=f"File is too large (max {max_bytes // (1024 * 1024)} MB).")
                 buffer.write(chunk)
     except HTTPException:
         os.remove(path)

@@ -9,15 +9,15 @@ const fadeUp = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, tra
 const container = { hidden: {}, visible: { transition: { staggerChildren: 0.07 } } };
 
 const sections = [
-  { title: '1. Acceptance of Terms', body: 'By accessing or using Hash# HRMS ("the Service"), you agree to be bound by these Terms of Service. If you do not agree, you may not use the Service. These Terms apply to all users including administrators, employees, and guests.' },
-  { title: '2. Description of Service', body: 'Hash# provides a cloud-based Human Resource Management System including modules for recruitment, onboarding, payroll, performance management, leave management, background verification, and AI analytics. Features may vary by subscription plan.' },
-  { title: '3. Account Registration & Security', body: 'You must provide accurate, complete information when registering. You are responsible for maintaining the confidentiality of your credentials and all activities under your account. Notify us immediately at security@hash.in of any unauthorised access.' },
-  { title: '4. Subscription & Payment', body: 'Subscriptions are billed monthly or annually in advance. Payments are non-refundable except as required by law. Hash# reserves the right to modify pricing with 30 days\' notice. Failure to pay may result in service suspension.' },
-  { title: '5. Data Ownership', body: 'You retain full ownership of all HR data you input into the platform. Hash# will not access your data except to provide the Service or as required by law. Upon termination, your data will be available for export for 90 days.' },
+  { title: '1. Acceptance of Terms', body: 'By accessing or using Cognitive EMS ("the Service"), you agree to be bound by these Terms of Service. If you do not agree, you may not use the Service. These Terms apply to all users including administrators, employees, and guests.' },
+  { title: '2. Description of Service', body: 'Cognitive EMS provides a cloud-based Human Resource Management System including modules for recruitment, onboarding, payroll, performance management, leave management, background verification, and AI analytics. Features may vary by subscription plan.' },
+  { title: '3. Account Registration & Security', body: 'You must provide accurate, complete information when registering. You are responsible for maintaining the confidentiality of your credentials and all activities under your account. Notify us immediately at security@cognitiveems.com of any unauthorised access.' },
+  { title: '4. Subscription & Payment', body: 'Subscriptions are billed monthly or annually in advance. Payments are non-refundable except as required by law. Cognitive EMS reserves the right to modify pricing with 30 days\' notice. Failure to pay may result in service suspension.' },
+  { title: '5. Data Ownership', body: 'You retain full ownership of all HR data you input into the platform. Cognitive EMS will not access your data except to provide the Service or as required by law. Upon termination, your data will be available for export for 90 days.' },
   { title: '6. Acceptable Use', body: 'You agree not to use the Service to violate any law, infringe intellectual property, transmit malware, conduct unauthorised penetration testing, scrape data without permission, or impersonate another person or organisation.' },
-  { title: '7. Intellectual Property', body: 'All software, algorithms, UI components, and documentation are the exclusive property of Hash# Solutions. No part of the Service may be copied, modified, or reverse-engineered without express written consent.' },
-  { title: '8. Limitation of Liability', body: 'To the maximum extent permitted by law, Hash#\'s liability for any claim arising out of these Terms shall not exceed the fees paid by you in the 3 months preceding the claim. We are not liable for indirect, incidental, or consequential damages.' },
-  { title: '9. Termination', body: 'Either party may terminate these Terms with 30 days\' written notice. Hash# may suspend or terminate immediately for material breach. Upon termination, your access ends and data export is available for 90 days.' },
+  { title: '7. Intellectual Property', body: 'All software, algorithms, UI components, and documentation are the exclusive property of Cognitive EMS. No part of the Service may be copied, modified, or reverse-engineered without express written consent.' },
+  { title: '8. Limitation of Liability', body: 'To the maximum extent permitted by law, Cognitive EMS\'s liability for any claim arising out of these Terms shall not exceed the fees paid by you in the 3 months preceding the claim. We are not liable for indirect, incidental, or consequential damages.' },
+  { title: '9. Termination', body: 'Either party may terminate these Terms with 30 days\' written notice. Cognitive EMS may suspend or terminate immediately for material breach. Upon termination, your access ends and data export is available for 90 days.' },
   { title: '10. Governing Law', body: 'These Terms are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of the courts of Noida, Uttar Pradesh, India. For international users, applicable local laws may also apply.' },
 ];
 
@@ -57,7 +57,7 @@ export default function TermsPage() {
             <h1 className="text-4xl md:text-5xl font-black tracking-tight">Terms of Service</h1>
             <p className="text-slate-500 text-sm">Last updated: June 20, 2026 &bull; Effective: June 20, 2026</p>
             <p className="text-slate-400 text-base max-w-xl mx-auto leading-relaxed">
-              Please read these terms carefully before using Hash# HRMS. They define your rights and obligations as a user.
+              Please read these terms carefully before using Cognitive EMS. They define your rights and obligations as a user.
             </p>
           </motion.div>
 
@@ -66,7 +66,7 @@ export default function TermsPage() {
           </motion.div>
 
           <motion.div variants={fadeUp} className={`${glassCard} p-6 text-center`}>
-            <p className="text-slate-400 text-sm">Questions about these terms? <a href="mailto:legal@hash.in" className="text-orange-400 hover:underline">legal@hash.in</a></p>
+            <p className="text-slate-400 text-sm">Questions about these terms? <a href="mailto:legal@cognitiveems.com" className="text-orange-400 hover:underline">legal@cognitiveems.com</a></p>
           </motion.div>
         </motion.div>
       </div>

@@ -412,12 +412,12 @@ def import_employees(
         email = get_val(["email"])
         if not email:
             email_base = f"{first_name.lower()}.{last_name.lower() or 'employee'}"
-            email = f"{email_base}@hash.in"
+            email = f"{email_base}@cognitiveems.com"
             
         # Deduplicate email
         existing = session.exec(select(Employee).where(Employee.email == email)).first()
         if existing:
-            email = f"{email.split('@')[0]}.{str(uuid.uuid4())[:4]}@hash.in"
+            email = f"{email.split('@')[0]}.{str(uuid.uuid4())[:4]}@cognitiveems.com"
             
         phone = get_val(["phone", "mobile", "contact"])
         role = get_val(["role", "designation", "title"], "Employee")

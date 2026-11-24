@@ -58,7 +58,7 @@ export default function SecurityPage() {
               <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">fortress-grade safe.</span>
             </h1>
             <p className="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
-              Security is not a feature at Hash# — it's the foundation. Every architectural decision starts with the question: how do we protect our customers' most sensitive data?
+              Security is not a feature at Cognitive EMS — it's the foundation. Every architectural decision starts with the question: how do we protect our customers' most sensitive data?
             </p>
           </motion.div>
 
@@ -110,8 +110,8 @@ export default function SecurityPage() {
               <AlertTriangle size={28} className="text-amber-400 mx-auto mb-4" />
               <h3 className="text-2xl font-black mb-2">Found a vulnerability?</h3>
               <p className="text-slate-400 text-sm mb-6 max-w-lg mx-auto">We run a responsible disclosure program. If you discover a security issue, please email us privately before public disclosure. We respond within 24 hours and reward impactful findings.</p>
-              <a href="mailto:security@hash.in" className="inline-flex items-center gap-2 px-7 py-3.5 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-black rounded-2xl hover:bg-emerald-500/25 transition-all text-sm uppercase tracking-widest">
-                security@hash.in
+              <a href="mailto:security@cognitiveems.com" className="inline-flex items-center gap-2 px-7 py-3.5 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-black rounded-2xl hover:bg-emerald-500/25 transition-all text-sm uppercase tracking-widest">
+                security@cognitiveems.com
               </a>
             </div>
           </motion.div>

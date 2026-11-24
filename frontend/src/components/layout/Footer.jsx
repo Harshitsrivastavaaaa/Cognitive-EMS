@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, ShieldCheck, Terminal, MapPin, Mail } from 'lucide-react';
-import AkiyamLogo from '../../assets/logo.png';
+import BrandLogo from '../../assets/logo.svg';
 
 export default function Footer() {
   return (
@@ -40,11 +40,9 @@ export default function Footer() {
           {/* Brand & Address (Span 6) */}
           <div className="lg:col-span-6 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 p-1.5 shadow-sm">
-                <img src={AkiyamLogo} alt="Logo" className="w-full h-full object-contain" />
-              </div>
+              <img src={BrandLogo} alt="Cognitive EMS logo" className="w-10 h-10 rounded-xl shadow-sm" />
               <span className="font-black text-lg tracking-tight text-slate-900">
-                Hash<span className="text-pink-600">#</span>AI <span className="text-xs font-semibold text-slate-500 pl-1 border-l border-slate-200 ml-1">EMS</span>
+                Cognitive <span className="text-blue-600">EMS</span>
               </span>
             </div>
             
@@ -56,11 +54,11 @@ export default function Footer() {
             <div className="space-y-2 pt-1 text-xs text-slate-600">
               <div className="flex items-start gap-2">
                 <MapPin size={15} className="text-pink-600 shrink-0 mt-0.5" />
-                <span>Hash#AI LLC, Cyber Park, Tower A, New Delhi, India</span>
+                <span>Cognitive EMS, Cyber Park, Tower A, New Delhi, India</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail size={15} className="text-pink-600 shrink-0" />
-                <span>support@hash.ai</span>
+                <span>support@cognitiveems.com</span>
               </div>
             </div>
           </div>
@@ -91,7 +89,7 @@ export default function Footer() {
 
         {/* Bottom Copyright & Security Badges Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© 2026 Hash#AI LLC. All rights reserved.</p>
+          <p>© 2026 Cognitive EMS. All rights reserved.</p>
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-100/80 border border-slate-200 text-slate-600 text-[10px] font-bold uppercase shadow-2xs">
               <ShieldCheck size={12} className="text-emerald-600" /> SOC2 Secure

@@ -83,12 +83,12 @@ const SpotlightCard = ({ children, className = '', color = 'rgba(249,115,22,0.08
 // ─── EXPANDED DATA CONSTANTS ─────────────────────────────────────────────────
 const jobs = [
   { 
-    id: 1, title: 'Senior Full-Stack Engineer', dept: 'Engineering', location: 'Remote / Noida', type: 'Full-time', color: 'text-violet-400', bg: 'bg-violet-500/10', border: 'border-violet-500/20', glow: 'rgba(139,92,246,0.15)', desc: 'Build the backbone of Hash#\'s neural HR platform. Expert in React, Node.js, and distributed systems required.',
+    id: 1, title: 'Senior Full-Stack Engineer', dept: 'Engineering', location: 'Remote / Noida', type: 'Full-time', color: 'text-violet-400', bg: 'bg-violet-500/10', border: 'border-violet-500/20', glow: 'rgba(139,92,246,0.15)', desc: 'Build the backbone of Cognitive EMS\'s neural HR platform. Expert in React, Node.js, and distributed systems required.',
     responsibilities: ['Architect scalable backend microservices using Node.js and Go.', 'Lead the migration of legacy data pipelines to a modern streaming architecture.', 'Mentor junior and mid-level engineers through code reviews and pair programming.'],
     requirements: ['5+ years of experience building high-throughput web applications.', 'Deep expertise in React, TypeScript, and modern state management.', 'Experience with AWS infrastructure (EKS, RDS, S3).']
   },
   { 
-    id: 2, title: 'AI / ML Research Engineer', dept: 'AI Research', location: 'Remote / Bangalore', type: 'Full-time', color: 'text-fuchsia-400', bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/20', glow: 'rgba(217,70,239,0.15)', desc: 'Design and train the matching, sourcing, and attrition-prediction models that power every Hash# module.',
+    id: 2, title: 'AI / ML Research Engineer', dept: 'AI Research', location: 'Remote / Bangalore', type: 'Full-time', color: 'text-fuchsia-400', bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/20', glow: 'rgba(217,70,239,0.15)', desc: 'Design and train the matching, sourcing, and attrition-prediction models that power every Cognitive EMS module.',
     responsibilities: ['Develop predictive models for employee attrition and engagement.', 'Optimize LLMs for resume parsing and skill-matching capabilities.', 'Collaborate with product teams to integrate AI models into the core platform.'],
     requirements: ['MS or PhD in Computer Science, AI, or related field.', 'Strong proficiency in Python, PyTorch, and TensorFlow.', 'Proven experience deploying machine learning models into production environments.']
   },
@@ -109,7 +109,7 @@ const jobs = [
   },
   { 
     id: 6, title: 'UX / Product Designer', dept: 'Design', location: 'Remote', type: 'Contract', color: 'text-pink-400', bg: 'bg-pink-500/10', border: 'border-pink-500/20', glow: 'rgba(236,72,153,0.15)', desc: 'Craft beautiful, functional interfaces for complex HR workflows. Figma proficiency and motion design skills valued.',
-    responsibilities: ['Translate complex HR workflows into simple, intuitive user interfaces.', 'Maintain and evolve the Hash# design system.', 'Create high-fidelity prototypes for usability testing and developer handoff.'],
+    responsibilities: ['Translate complex HR workflows into simple, intuitive user interfaces.', 'Maintain and evolve the Cognitive EMS design system.', 'Create high-fidelity prototypes for usability testing and developer handoff.'],
     requirements: ['Stunning portfolio demonstrating premium B2B or SaaS product design.', 'Expert-level proficiency in Figma.', 'Understanding of HTML/CSS and framer-motion is a strong plus.']
   },
 ];
@@ -242,7 +242,7 @@ export default function CareersPage() {
           {/* ── PERKS & BENEFITS ─────────────────────────────────────────────── */}
           <motion.div variants={fadeInUp}>
             <div className="text-center mb-12">
-              <h2 className={`text-4xl md:text-5xl font-black tracking-tighter ${textPrimary} mb-4`}>Why Hash#?</h2>
+              <h2 className={`text-4xl md:text-5xl font-black tracking-tighter ${textPrimary} mb-4`}>Why Cognitive EMS?</h2>
               <p className="text-slate-400 max-w-xl mx-auto font-medium">
                 We believe in taking care of the people who are building the future of people ops.
               </p>
@@ -277,7 +277,7 @@ export default function CareersPage() {
                 </p>
                 
                 <a 
-                  href="mailto:careers@hash.in" 
+                  href="mailto:careers@cognitiveems.com" 
                   className="inline-flex items-center gap-2 px-10 h-14 bg-white text-black font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_4px_24px_rgba(255,255,255,0.2)] text-sm uppercase tracking-widest whitespace-nowrap"
                 >
                   Send Open Application <ArrowRight size={16} />

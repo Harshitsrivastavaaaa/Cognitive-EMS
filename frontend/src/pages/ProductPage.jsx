@@ -86,7 +86,7 @@ const SpotlightCard = ({ children, className = '', color = 'rgba(236,72,153,0.06
 // ─── DATA CONSTANTS ──
 const flagshipProducts = [
   {
-    name: "Hash#AI",
+    name: "Cognitive AI",
     tagline: "AI Chat and custom Output platform",
     desc: "Our flagship enterprise platform handling directory sync, custom AI generation, global compliance, and automated workflows.",
     icon: Users2,
@@ -98,7 +98,7 @@ const flagshipProducts = [
     glow: "rgba(59,130,246,0.12)"
   },
   {
-    name: "Hash#AI EMS",
+    name: "Cognitive EMS",
     tagline: "Autonomous Employee Management & Parsing",
     desc: "AI engine that scans resumes, schedules round-table interviews, evaluates technical scorecards, and generates verified offer letters.",
     icon: BrainCircuit,
@@ -110,7 +110,7 @@ const flagshipProducts = [
     glow: "rgba(168,85,247,0.12)"
   },
   {
-    name: "Hash#AI Resume Analyser",
+    name: "Cognitive Resume Analyser",
     tagline: "Analyses and gives suggestions on improvements and betterments",
     desc: "Advanced neural evaluation tool that parses career profiles, benchmarks skills, and provides structured improvement suggestions.",
     icon: Server,
@@ -122,7 +122,7 @@ const flagshipProducts = [
     glow: "rgba(16,185,129,0.12)"
   },
   {
-    name: "Hash# Vault Ledger",
+    name: "Cognitive Vault Ledger",
     tagline: "Cryptographic Credential & BGV Engine",
     desc: "Instant immutable ID badge generator, statutory salary slips, offboarding certificates, and background check audits.",
     icon: ShieldCheck,
@@ -195,7 +195,7 @@ export default function ProductPage() {
           <motion.div variants={fadeInUp} className="text-center max-w-3xl mx-auto space-y-4 pt-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/90 shadow-2xs text-[11px] font-semibold text-slate-700 mx-auto">
               <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
-              Hash#AI Product Lineup & Architecture
+              Cognitive EMS Product Lineup & Architecture
             </div>
             
             <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.12] text-slate-900">

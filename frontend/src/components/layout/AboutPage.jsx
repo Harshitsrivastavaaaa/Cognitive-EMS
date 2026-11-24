@@ -8,11 +8,10 @@ import {
 } from 'lucide-react';
 import Footer from './Footer'; 
 import Navbar from './Navbar';
+import BrandLogo from '../../assets/logo.svg';
 
-const AkiyamLogo = () => (
-  <div className="w-5 h-5 flex items-center justify-center bg-gradient-to-tr from-pink-600 to-purple-600 rounded text-[10px] font-black text-white shadow-sm">
-    A
-  </div>
+const BrandMark = () => (
+  <img src={BrandLogo} alt="Cognitive EMS logo" className="w-10 h-10 rounded-xl" />
 );
 
 // ------ THEME --------
@@ -129,7 +128,7 @@ export default function AboutPage() {
           </motion.h1>
 
           <motion.p variants={fadeInUp} className="text-slate-600 text-sm md:text-base max-w-2xl leading-relaxed mb-8">
-            Hash# replaces fragmented, manual HR processes with an autonomous neural network. We help high-growth companies slash overhead, guarantee compliance, and hire top-tier talent in milliseconds.
+            Cognitive EMS replaces fragmented, manual HR processes with an autonomous neural network. We help high-growth companies slash overhead, guarantee compliance, and hire top-tier talent in milliseconds.
           </motion.p>
           
           <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
@@ -176,7 +175,7 @@ export default function AboutPage() {
       <section className="relative w-full py-20 px-6">
         <div className="max-w-6xl mx-auto w-full">
           <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Why Enterprise Leaders Choose Hash#</h2>
+            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Why Enterprise Leaders Choose Cognitive EMS</h2>
             <p className="text-slate-600 text-xs sm:text-sm max-w-xl mx-auto">We don't sell software. We sell the infrastructure that protects your company from liability while accelerating growth.</p>
           </div>
 
@@ -215,7 +214,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 mb-2">Zero-Touch Operations</h3>
                 <p className="text-slate-600 text-xs leading-relaxed">
-                  From dispatching offer letters to provisioning accounts and IT hardware, Hash# operates as an autonomous background agent ensuring team readiness on Day 1.
+                  From dispatching offer letters to provisioning accounts and IT hardware, Cognitive EMS operates as an autonomous background agent ensuring team readiness on Day 1.
                 </p>
               </SpotlightCard>
             </motion.div>
@@ -237,7 +236,7 @@ export default function AboutPage() {
                 <span className="text-slate-500">for business leaders.</span>
               </h2>
               <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6">
-                We didn't set out to build another generic HR dashboard. We built a complex systems solver designed to handle the massive operational friction that slows companies down. When you partner with Hash#, you aren't buying software—you are acquiring an autonomous operational team.
+                We didn't set out to build another generic HR dashboard. We built a complex systems solver designed to handle the massive operational friction that slows companies down. When you partner with Cognitive EMS, you aren't buying software—you are acquiring an autonomous operational team.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="flex items-center gap-2 text-xs font-bold text-slate-900"><CheckCircle2 size={15} className="text-emerald-600"/> SOC2 Type II Certified</div>
@@ -256,7 +255,7 @@ export default function AboutPage() {
                    <div className="absolute top-1/2 -left-2.5 -translate-y-1/2 w-5 h-5 bg-blue-500/20 border border-blue-500/50 rounded-full blur-[1px]" />
                 </div>
                 <div className="absolute w-20 h-20 bg-white border border-slate-200 shadow-lg rounded-2xl flex items-center justify-center rotate-12">
-                  <AkiyamLogo />
+                  <BrandMark />
                 </div>
               </div>
             </div>
@@ -274,7 +273,7 @@ export default function AboutPage() {
               Ready to upgrade your enterprise architecture?
             </h2>
             <p className="text-slate-300 text-xs md:text-sm leading-relaxed mb-8">
-              Let our engineering team show you how Hash# can integrate directly into your existing stack to eliminate overhead and secure your hiring pipeline.
+              Let our engineering team show you how Cognitive EMS can integrate directly into your existing stack to eliminate overhead and secure your hiring pipeline.
             </p>
             
             <div className="flex flex-col sm:flex-row justify-center gap-3">

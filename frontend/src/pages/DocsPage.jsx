@@ -84,7 +84,7 @@ export default function DocsPage() {
             </h1>
             
             <p className="text-slate-600 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
-              Comprehensive guides, API reference, tutorials, and integration docs for every Hash# module.
+              Comprehensive guides, API reference, tutorials, and integration docs for every Cognitive EMS module.
             </p>
 
             {/* Search Bar */}

@@ -11,7 +11,7 @@ import { salaryService, employeesService } from '../services/employees'
 import { useApp } from '../context/AppContext'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import logoSrc from '../assets/logo.png'
+import { useBranding } from '../context/BrandingContext'
 
 const MONTHS = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -60,7 +60,7 @@ function StatCard({ label, value, sub, icon: Icon, color, index }) {
     )
 }
 
-function downloadPayslip(record) {
+function downloadPayslip(record, { logoSrc, companyName, contactLine }) {
     const generateAndSave = (imgElement) => {
         const doc = new jsPDF()
 
@@ -89,7 +89,7 @@ function downloadPayslip(record) {
 
         doc.setFontSize(20)
         doc.setTextColor(40, 40, 40)
-        doc.text("Hash AI LLC", textStartX, 22)
+        doc.text(companyName, textStartX, 22)
 
         doc.setFontSize(10)
         doc.setTextColor(100, 100, 100)
@@ -165,7 +165,8 @@ function downloadPayslip(record) {
         // Footer
         doc.setFontSize(9)
         doc.setTextColor(150, 150, 150)
-        doc.text("This is an official computer-generated document of Hash AI LLC. No signature is required.", 14, finalY + 20)
+        doc.text(`This is an official computer-generated document of ${companyName}. No signature is required.`, 14, finalY + 20)
+        if (contactLine) doc.text(doc.splitTextToSize(contactLine, 182), 14, finalY + 25)
 
         const safeName = (record.employee_name || 'Employee').replace(/\s+/g, '_')
         const fileName = `Payslip_${safeName}_${record.month}_${record.year}.pdf`
@@ -591,6 +592,7 @@ function BulkProcessModal({ onClose, onSuccess }) {
 }
 
 export default function SalaryPage() {
+    const { documentLogoUrl, companyName, contactLine } = useBranding()
     const { addNotification } = useApp()
     const [records, setRecords] = useState([])
     const [employees, setEmployees] = useState([])
@@ -867,7 +869,7 @@ export default function SalaryPage() {
                                                 {/* Actions */}
                                                 <td className="px-6 py-4 text-right pr-6">
                                                     <div className="flex items-center justify-end gap-1">
-                                                        <button onClick={() => downloadPayslip(record)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Download Payslip" aria-label="Download payslip">
+                                                        <button onClick={() => downloadPayslip(record, { logoSrc: documentLogoUrl, companyName, contactLine })} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Download Payslip" aria-label="Download payslip">
                                                             <Download size={16} />
                                                         </button>
                                                         <button onClick={() => setEditRecord(record)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit" aria-label="Edit salary record">

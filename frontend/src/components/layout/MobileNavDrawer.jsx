@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-import AkiyamLogo from "../../assets/logo.png";
+import { useBranding } from "../../context/BrandingContext";
 
 /**
  * Slide-in navigation drawer for small screens.
@@ -14,6 +14,7 @@ import AkiyamLogo from "../../assets/logo.png";
  * hiddenAbove: Tailwind breakpoint prefix at which the drawer is no longer used ("lg" | "xl")
  */
 export default function MobileNavDrawer({ open, onClose, brand, sections, linkClass, hiddenAbove = "lg" }) {
+  const { logoUrl, companyName } = useBranding();
   const hiddenClass = hiddenAbove === "xl" ? "xl:hidden" : "lg:hidden";
 
   return createPortal(
@@ -37,7 +38,7 @@ export default function MobileNavDrawer({ open, onClose, brand, sections, linkCl
           >
             <div className="flex items-center justify-between px-4 h-16 border-b border-slate-100 shrink-0">
               <div className="flex items-center gap-2.5">
-                <img src={AkiyamLogo} alt="Logo" className="w-8 h-8 object-contain" />
+                <img src={logoUrl} alt={`${companyName} logo`} className="w-8 h-8 rounded-lg object-contain" />
                 {brand}
               </div>
               <button

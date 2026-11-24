@@ -1,5 +1,5 @@
 """
-Hash# HRMS - Database Migration Utility
+Cognitive EMS - Database Migration Utility
 
 This script connects to an existing SQLite database (employees.db)
 and copies all existing tables and records into your target database (e.g. PostgreSQL).

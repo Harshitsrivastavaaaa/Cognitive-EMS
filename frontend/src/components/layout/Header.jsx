@@ -10,7 +10,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "../../context/AppContext";
 import CommandPalette from "../common/CommandPalette";
 import MobileNavDrawer from "./MobileNavDrawer";
-import AkiyamLogo from "../../assets/logo.png";
+import { useBranding } from "../../context/BrandingContext";
+import CompanyName from "../common/CompanyName";
 
 // Top-level entries either link directly or open a group of related pages.
 const NAV_ITEMS = [
@@ -43,6 +44,7 @@ export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout: authLogout, user: authUser } = useAuth();
+  const { logoUrl, companyName } = useBranding();
   const [cmdOpen, setCmdOpen] = useState(false);
   
   const user = authUser 
@@ -133,16 +135,9 @@ export default function Header() {
         <Menu size={16} />
       </button>
       <div className="flex items-center gap-3 shrink-0 cursor-pointer group" onClick={() => navigate('/dashboard')}>
-        <div className="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200/80 p-1 shadow-sm group-hover:scale-105 transition-transform">
-          <img src={AkiyamLogo} alt="Logo" className="w-full h-full object-contain" />
-        </div>
-        <div className="hidden sm:flex items-center gap-1.5 tracking-tight">
-          <span className="font-black text-base text-slate-900 tracking-tighter">
-            Hash<span className="text-blue-600">#</span>AI
-          </span>
-          <span className="hidden xl:inline text-xs font-semibold text-slate-400 border-l border-slate-200 pl-2">
-            EMS Platform
-          </span>
+        <img src={logoUrl} alt={`${companyName} logo`} className="w-9 h-9 rounded-xl object-contain shadow-sm group-hover:scale-105 transition-transform" />
+        <div className="hidden sm:flex items-center gap-1.5 tracking-tight min-w-0">
+          <CompanyName className="font-black text-base text-slate-900 tracking-tight max-w-[220px]" />
         </div>
       </div>
       </div>
@@ -211,11 +206,7 @@ export default function Header() {
         open={isMobileNavOpen}
         onClose={() => setIsMobileNavOpen(false)}
         linkClass={navLinkClass}
-        brand={
-          <span className="font-black text-base text-slate-900 tracking-tighter">
-            Hash<span className="text-blue-600">#</span>AI
-          </span>
-        }
+        brand={<CompanyName className="font-black text-base text-slate-900 tracking-tight max-w-[170px]" />}
         sections={[
           { items: NAV_ITEMS.filter(item => !item.children) },
           ...NAV_ITEMS.filter(item => item.children).map(item => ({ heading: item.label, items: item.children })),

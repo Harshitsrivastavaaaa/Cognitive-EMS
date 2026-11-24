@@ -64,8 +64,8 @@ const contactInfo = [
   {
     icon: Mail,
     label: "Dedicated Support Desk",
-    value: "support@hash.ai",
-    href: "mailto:support@hash.ai",
+    value: "support@cognitiveems.com",
+    href: "mailto:support@cognitiveems.com",
     color: "text-pink-600",
     bg: "bg-pink-50 border border-pink-200",
   },
